@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from "react"
+import { Link } from "react-router-dom"
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from "recharts"
 import { ARC, LOW_SEVERITY_BRIDGE } from "../data/archetypes.js"
+import { generateCouponSession, captureUtmsFromLocation } from "../coupon.js"
 
 function trackQuizEvent(name, payload = {}) {
   const event = { event: name, timestamp: Date.now(), ...payload }
@@ -240,6 +242,15 @@ function QuestionCard({q,qi,sel,onSel,showV,showNext,onNext,qk,onBack}){
   const bColors=['rgba(139,92,246','rgba(33,201,208','rgba(240,180,41']
   const bTxt=['#C4B5FD','#67E8F9','#FCD34D']
   const nextRef=useRef(null)
+  const firstOptionRef=useRef(null)
+  // KAN-18: ao carregar nova pergunta (qk muda) sem resposta selecionada, foco vai para a primeira
+  // opção. Isso garante que o primeiro Tab cai nas opções (A→B→C→D), não em "Voltar".
+  useEffect(()=>{
+    if(sel)return
+    if(!firstOptionRef.current)return
+    const focusTimer=setTimeout(()=>{firstOptionRef.current&&firstOptionRef.current.focus({preventScroll:true})},80)
+    return()=>clearTimeout(focusTimer)
+  },[qk,sel])
   useEffect(()=>{
     if(showNext&&nextRef.current){
       const focusTimer=setTimeout(()=>{nextRef.current&&nextRef.current.focus({preventScroll:true})},60)
@@ -261,6 +272,7 @@ function QuestionCard({q,qi,sel,onSel,showV,showNext,onNext,qk,onBack}){
             return(
               <label key={opt.k} htmlFor={`q${q.id}-${opt.k}`} className={`oc fi d${i+1}${isSel?' os':''}`} style={{background:isSel?'rgba(123,94,167,.2)':'rgba(18,15,45,.9)',border:`1.5px solid ${isSel?'#7B5EA7':'#251E5C'}`,borderRadius:12,padding:'13px 15px',display:'flex',alignItems:'center',gap:12,opacity:isOth?.42:1,cursor:sel?'default':'pointer'}}>
                 <input
+                  ref={i===0?firstOptionRef:null}
                   type="radio"
                   id={`q${q.id}-${opt.k}`}
                   name={`q${q.id}`}
@@ -487,20 +499,20 @@ function Result({arc,scores,xp,onReset}){
             ))}
           </div>
         </div>
-        <a
+        <Link
           id="result-cta"
-          href={arc.ctaUrl||'#'}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={e=>{
-            trackQuizEvent('cta_clicked',{archetypeId:arc.id||arc.name,archetypeName:arc.name,ctaPosition:'primary',destination:arc.ctaUrl||'placeholder',xpEarned:xp||0,scores})
-            if(!arc.ctaUrl||arc.ctaUrl==='#')e.preventDefault()
+          to={isLowSeverity?'/planner/manutencao':(arc.ctaUrl||`/planner/${arc.slug||'furacao'}`)}
+          onClick={()=>{
+            // KAN-16: CTA usa Link interno (react-router) em vez de <a target="_blank">. Mantém estado de aplicação,
+            // preserva UTMs em localStorage (capturadas via captureUtmsFromLocation no início do quiz),
+            // e Landing lê o cupom recém-gerado por onProcDone via getCouponSession().
+            trackQuizEvent('cta_clicked',{archetypeId:arc.id||arc.name,archetypeName:arc.name,ctaPosition:'primary',destination:isLowSeverity?'/planner/manutencao':(arc.ctaUrl||'placeholder'),xpEarned:xp||0,scores,isLowSeverity})
           }}
           className="gb sq"
           style={{display:'block',background:'linear-gradient(135deg,#F0B429,#F97316)',border:'none',borderRadius:14,padding:'16px 24px',fontSize:15,fontWeight:700,color:'#0A0818',cursor:'pointer',width:'100%',boxShadow:'0 4px 22px rgba(240,180,41,.3)',marginBottom:10,textDecoration:'none',textAlign:'center',boxSizing:'border-box'}}
         >
           Quero meu Planner {arc.name} →
-        </a>
+        </Link>
         <p className="nn" style={{fontSize:13,color:'#9892C4',textAlign:'center',lineHeight:1.55,padding:'0 8px',marginBottom:14}}>
           Este é um questionário de autoconhecimento sobre padrões de atenção. Não é uma ferramenta clínica e não substitui avaliação por psicólogo, psiquiatra ou neurologista.
         </p>
@@ -545,6 +557,15 @@ export default function Quiz(){
   const appStartRef=useRef(Date.now())
   const abandonFiredRef=useRef(false)
   const abandonTimerRef=useRef(null)
+  const utmsCapturedRef=useRef(false)
+
+  // KAN-16: capturar UTMs uma única vez ao montar o quiz. Persistem em localStorage para
+  // serem propagadas para o checkout/Kiwify mesmo após navegação pelo router.
+  useEffect(()=>{
+    if(utmsCapturedRef.current)return
+    captureUtmsFromLocation()
+    utmsCapturedRef.current=true
+  },[])
 
   useEffect(()=>{
     const fireAbandon=(reason)=>{
@@ -654,7 +675,10 @@ export default function Quiz(){
     setArc(foundArc)
     setScores(fs)
     setScr('result')
-    trackQuizEvent('result_viewed',{archetypeId:foundArc?.name,scores:fs})
+    // KAN-15: ao terminar o quiz, gerar sessão de cupom (24h timestamp-based) e persistir em localStorage.
+    // Landing.jsx lê do mesmo storage e renderiza o contador real.
+    const couponSession=generateCouponSession()
+    trackQuizEvent('result_viewed',{archetypeId:foundArc?.name,scores:fs,couponExpiresAt:couponSession?.expiresAt||null})
   }
 
   const onBack=()=>{

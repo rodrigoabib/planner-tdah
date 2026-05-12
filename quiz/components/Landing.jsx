@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import {
   SLUG_TO_ARCHETYPE,
@@ -7,6 +7,8 @@ import {
   LANDING_BENEFITS,
   FAQ
 } from '../data/archetypes.js'
+import { getCouponSession, buildCheckoutUrl, getStoredUtms } from '../coupon.js'
+import CouponCountdown from './CouponCountdown.jsx'
 
 const LANDING_CSS = `
 @import url('https://cdn.jsdelivr.net/npm/@fontsource/syne@5/index.css');
@@ -280,8 +282,12 @@ function FaqAccordion() {
   )
 }
 
-function CtaSection({ arc }) {
+function CtaSection({ arc, session, utms }) {
   const co = arc.color
+  const couponActive = session && !session.isExpired
+  const expired = session && session.isExpired
+  const displayPrice = couponActive ? OFFER.priceCoupon : OFFER.priceFull
+  const checkoutUrl = buildCheckoutUrl(OFFER.kiwifyCheckoutPlaceholder, { session, utms })
   return (
     <section className="lp-fade" style={{ padding: '8px 20px 32px', maxWidth: 620, margin: '0 auto' }}>
       <div
@@ -297,18 +303,35 @@ function CtaSection({ arc }) {
           Investimento único
         </div>
         <div style={{ marginBottom: 12 }}>
-          <span className="lp-mm" style={{ fontSize: 13, color: C.textLow, textDecoration: 'line-through', marginRight: 10 }}>
-            {OFFER.priceFull}
-          </span>
+          {couponActive && (
+            <span className="lp-mm" style={{ fontSize: 13, color: C.textLow, textDecoration: 'line-through', marginRight: 10 }}>
+              {OFFER.priceFull}
+            </span>
+          )}
           <span className="lp-sq" style={{ fontSize: 'clamp(32px,8vw,44px)', fontWeight: 800, color: C.accent, lineHeight: 1 }}>
-            {OFFER.priceCoupon}
+            {displayPrice}
           </span>
         </div>
-        <p className="lp-nn" style={{ fontSize: 13, color: C.textLow, marginBottom: 16, lineHeight: 1.5 }}>
-          Cupom <strong style={{ color: C.textHi }}>{OFFER.couponCode}</strong> de {OFFER.couponDiscount} aplicado automaticamente no checkout.
-        </p>
+        {couponActive && (
+          <div style={{ marginBottom: 14 }}>
+            <CouponCountdown session={session} />
+            <p className="lp-nn" style={{ fontSize: 13, color: C.textLow, marginTop: 10, lineHeight: 1.5 }}>
+              Cupom <strong style={{ color: C.textHi }}>{OFFER.couponCode}</strong> de {OFFER.couponDiscount} aplicado automaticamente no checkout.
+            </p>
+          </div>
+        )}
+        {expired && (
+          <p className="lp-nn" role="status" style={{ fontSize: 13, color: C.textLow, marginBottom: 14, lineHeight: 1.5 }}>
+            <strong style={{ color: '#F87171' }}>Oferta com cupom expirou.</strong> Preço cheio aplicado automaticamente no checkout.
+          </p>
+        )}
+        {!session && (
+          <p className="lp-nn" style={{ fontSize: 13, color: C.textLow, marginBottom: 14, lineHeight: 1.5 }}>
+            Preço regular. Para liberar o cupom de R$ 20 de desconto, complete o quiz primeiro: <Link to="/" style={{ color: C.accent, textDecoration: 'underline' }}>fazer o quiz</Link>.
+          </p>
+        )}
         <a
-          href={OFFER.kiwifyCheckoutPlaceholder}
+          href={checkoutUrl}
           target="_blank"
           rel="noopener noreferrer"
           className="lp-cta-btn lp-sq"
@@ -362,6 +385,20 @@ function DisclaimerSection() {
 export default function Landing() {
   const { slug } = useParams()
   const data = SLUG_TO_ARCHETYPE[slug]
+  const [session, setSession] = useState(() => (typeof window === 'undefined' ? null : getCouponSession()))
+  const [utms] = useState(() => (typeof window === 'undefined' ? {} : getStoredUtms()))
+
+  // Re-checa a sessão se a janela voltar do background (caso o cupom tenha expirado enquanto inativo).
+  useEffect(() => {
+    if (typeof document === 'undefined') return
+    const handleVisibility = () => {
+      if (document.visibilityState === 'visible') {
+        setSession(getCouponSession())
+      }
+    }
+    document.addEventListener('visibilitychange', handleVisibility)
+    return () => document.removeEventListener('visibilitychange', handleVisibility)
+  }, [])
 
   if (!data) {
     return <NotFoundView />
@@ -389,7 +426,7 @@ export default function Landing() {
         <GuaranteeSection />
         {/* Seção 7 (prova social) intencionalmente omitida na v1 — FOUNDATION-2 §3 proíbe placeholders/depoimentos não-reais. */}
         <FaqAccordion />
-        <CtaSection arc={arc} />
+        <CtaSection arc={arc} session={session} utms={utms} />
         <DisclaimerSection />
       </main>
     </div>
