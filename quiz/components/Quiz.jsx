@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react"
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from "recharts"
+import { ARC, LOW_SEVERITY_BRIDGE } from "../data/archetypes.js"
 
 function trackQuizEvent(name, payload = {}) {
   const event = { event: name, timestamp: Date.now(), ...payload }
@@ -116,45 +117,6 @@ const TEASERS = {
   8:  'Você respondeu de forma muito próxima a um dos 6 perfis.',
   11: 'Faltam 3 perguntas. O sistema identificou algo claro.',
   13: 'Última reta — quase lá.',
-}
-
-const ARC = {
-  nomade:{sym:'∞',id:'nomade-quantico',name:'O Nômade Quântico',tag:'Presente em todos os lugares. Em nenhum ao mesmo tempo.',color:'#8B5CF6',
-    ctaUrl:'/planner?perfil=nomade-quantico',
-    profile:{D:'S',I:'N',A:'M',E:'N',H:'N'},
-    reco:['Você relê o mesmo parágrafo três vezes — e ainda assim não absorve.','Tem ideias ricas e profundas, mas horas se passam antes de colocá-las em prática.','Às vezes viaja no meio de uma conversa e volta sem saber o que perdeu.'],
-    cost:['Compromissos importantes escapam da memória mesmo com boa intenção.','A sensação de que o tempo passou sem você perceber é constante e frustrante.'],
-    bridge:'Planners lineares assumem que você vai lembrar de olhar para eles. O seu planner precisa de âncoras temporais visuais, captura rápida e lembretes contextuais — para que o mundo externo te alcance antes que o tempo escape.'},
-  reator:{sym:'▲',id:'reator-em-cadeia',name:'O Reator em Cadeia',tag:'Energia infinita. Freio é opcional.',color:'#EF4444',
-    ctaUrl:'/planner?perfil=reator-em-cadeia',
-    profile:{D:'M',I:'S',A:'M',E:'M',H:'S'},
-    reco:['Você decide enquanto ainda está terminando de pensar na decisão anterior.','Projetos começam com 100% de entusiasmo — e perdem combustível antes da metade.','A energia que outros veem como carisma, você sabe que é o freio faltando.'],
-    cost:['Decisões rápidas já custaram dinheiro, relacionamentos ou oportunidades.','Manter qualquer coisa consistente por mais de algumas semanas é uma luta real.'],
-    bridge:'Planners tradicionais ignoram que você tem energia de sobra mas freio insuficiente. O seu planner precisa de speed bumps intencionais — pausas antes de decisões grandes e checkpoints de consistência.'},
-  vulcao:{sym:'◆',id:'vulcao-silencioso',name:'O Vulcão Silencioso',tag:'Por fora: calma. Por dentro: lava.',color:'#F59E0B',
-    ctaUrl:'/planner?perfil=vulcao-silencioso',
-    profile:{D:'M',I:'M',A:'S',E:'S',H:'N'},
-    reco:['Por fora você parece bem. Só você sabe o que está acontecendo por dentro.','Uma crítica pequena pode desestabilizar um dia inteiro — difícil explicar por quê.','Você adia tarefas não por preguiça, mas por medo real de não ser bom o suficiente.'],
-    cost:['A batalha emocional diária é invisível para quase todos ao redor — e isso isola.','Depois de um erro, retomar pode levar dias que custam muito.'],
-    bridge:'Planners que não reconhecem estados emocionais falham nos seus dias difíceis. O seu planner precisa de check-ins de humor, dias de buffer e estrutura adaptável ao estado do dia.'},
-  arquiteto:{sym:'⬡',id:'arquiteto-do-caos',name:'O Arquiteto do Caos',tag:'Mil ideias. Zero andaimes.',color:'#10B981',
-    ctaUrl:'/planner?perfil=arquiteto-do-caos',
-    profile:{D:'S',I:'S',A:'S',E:'M',H:'M'},
-    reco:['Você é uma máquina de ideias — e um cemitério de projetos pela metade.','Sabe exatamente o que quer construir. O problema é o andaime entre visão e execução.','Toda vez que vai organizar, surge uma ideia nova que parece mais urgente.'],
-    cost:['Sem estrutura externa sólida, projetos importantes morrem na fase do entusiasmo.','A sensação de quase lá sem nunca chegar lá é real, frequente e frustrante.'],
-    bridge:'Planners vazios só multiplicam o caos — você precisa de andaime, não de espaço em branco. O seu planner quebra visões grandes em micro-ações e tem captura de ideias que não sabota o que está em execução.'},
-  furacao:{sym:'✦',id:'furacao',name:'O Furacão',tag:'Tudo ao máximo. Sempre.',color:'#EC4899',
-    ctaUrl:'/planner?perfil=furacao',
-    profile:{D:'S',I:'S',A:'S',E:'S',H:'S'},
-    reco:['Você experimenta tudo ao máximo — energia, distração, emoção e impulso simultaneamente.','Um dia comum para outros é genuinamente exaustivo para o seu sistema nervoso.','Sobreviveu até aqui com uma resiliência que poucas pessoas ao redor reconhecem.'],
-    cost:['O esforço constante de autorregulação em todas as áreas cansa de um jeito profundo.','Manter qualquer rotina é uma luta real — não por falta de vontade.'],
-    bridge:'Qualquer sistema com muitas etapas vai falhar com você. O seu planner precisa ser radical em simplicidade — 1-3 prioridades absolutas por dia, reset fácil, zero punição por dias ruins.'},
-  camaleao:{sym:'◑',id:'camaleao-exausto',name:'O Camaleão Exausto',tag:'Parece que dá conta. Por dentro, é outra história.',color:'#22D3EE',
-    ctaUrl:'/planner?perfil=camaleao-exausto',
-    profile:{D:'M',I:'M',A:'M',E:'M',H:'N'},
-    reco:['Você funciona. Só você sabe exatamente o custo disso.','Desenvolveu sistemas, compensações e máscaras — e ninguém percebe o esforço.','Provavelmente foi diagnosticado tarde, ou ainda não foi. Sempre se virou foi o obstáculo.'],
-    cost:['O burnout acumulado por anos de sobresforço invisível chega de forma súbita.','A sensação de que aos outros parece fácil pode ser mais pesada que qualquer sintoma.'],
-    bridge:'Você não precisa de mais exigência — precisa de permissão para funcionar de forma sustentável. O seu planner reconhece que fazer menos bem feito é muitas vezes o movimento mais inteligente do dia.'}
 }
 
 const DIM_MAX={D:11,H:9,I:9,A:11,E:11}
@@ -339,6 +301,39 @@ function QuestionCard({q,qi,sel,onSel,showV,showNext,onNext,qk,onBack}){
   )
 }
 
+function MilestonePartialRadar({scores}){
+  const partialMax={D:7,H:6,I:6}
+  const pct=(dim)=>{
+    const max=partialMax[dim]
+    const sc=Math.min(scores[dim]||0,max)
+    return Math.min(100,Math.round((sc/max)*100))
+  }
+  const rd=[
+    {dim:'Desatenção',val:pct('D')},
+    {dim:'Hiperativ.',val:pct('H')},
+    {dim:'Impulsiv.',val:pct('I')},
+    {dim:'🔒 Autoreg.',val:10},
+    {dim:'🔒 Emocional',val:10}
+  ]
+  return(
+    <div style={{marginBottom:14}}>
+      <div style={{position:'relative'}}>
+        <ResponsiveContainer width="100%" height={210}>
+          <RadarChart data={rd} cx="50%" cy="50%" outerRadius="68%">
+            <PolarGrid stroke="rgba(33,201,208,.28)"/>
+            <PolarAngleAxis dataKey="dim" tick={{fill:'#9892C4',fontSize:10,fontFamily:'inherit'}}/>
+            <PolarRadiusAxis domain={[0,100]} tick={false} axisLine={false}/>
+            <Radar name="parcial" dataKey="val" stroke="#21C9D0" fill="#21C9D0" fillOpacity={.30} strokeWidth={2}/>
+          </RadarChart>
+        </ResponsiveContainer>
+      </div>
+      <p className="nn" style={{fontSize:11,color:'#897FC0',textAlign:'center',marginTop:4,lineHeight:1.4}}>
+        🔒 Autorregulação e Emocional desbloqueadas após Q15
+      </p>
+    </div>
+  )
+}
+
 function MilestoneCard({num,scores,onCont,xpGained}){
   const mCfg=[
     {color:'#8B5CF6',title:'Traço detectado!',sub:'Suas primeiras 5 respostas revelam um padrão claro.',body:'Seu cérebro processa o mundo de uma forma bem específica. Continue para revelar o quadro completo.',btnTxt:'Continuar (10 perguntas) →',xtra:null},
@@ -347,7 +342,6 @@ function MilestoneCard({num,scores,onCont,xpGained}){
   ]
   const m=mCfg[num-1]
   const xpLabel=num===3?`+${xpGained||50} XP · PERFIL COMPLETO!`:`+${xpGained||25} XP · Marco Desbloqueado!`
-  const partialMax={D:7,H:6,I:6}
   return(
     <div style={{background:'#0A0818',minHeight:560,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:'24px 20px',position:'relative',overflow:'hidden'}}>
       <Confetti on={true}/>
@@ -360,35 +354,7 @@ function MilestoneCard({num,scores,onCont,xpGained}){
         </div>
         <h3 className="sq" style={{fontSize:22,fontWeight:800,color:'#D8D2F0',marginBottom:6}}>{m.title}</h3>
         <p className="nn" style={{fontSize:14,color:'#897FC0',marginBottom:18,lineHeight:1.55}}>{m.sub}</p>
-        {m.xtra==='preview'&&(
-          <div style={{marginBottom:18}}>
-            {['D','H','I'].map(d=>{
-              const sc=Math.min(scores[d]||0,partialMax[d])
-              const max=partialMax[d]
-              const pct=Math.min(100,Math.round((sc/max)*100))
-              return(
-                <div key={d} style={{marginBottom:9,textAlign:'left'}}>
-                  <div style={{display:'flex',justifyContent:'space-between',marginBottom:3}}>
-                    <span className="nn" style={{fontSize:12,color:'#897FC0'}}>{DIMS[d]}</span>
-                    <span className="mm" style={{fontSize:11,color:'#C4B5FD'}}>{sc}/{max} parcial</span>
-                  </div>
-                  <div style={{height:5,background:'rgba(37,30,92,.7)',borderRadius:99,overflow:'hidden'}}>
-                    <div className="pbar" style={{height:'100%',width:`${pct}%`,borderRadius:99}}/>
-                  </div>
-                </div>
-              )
-            })}
-            {['A','E'].map(d=>(
-              <div key={d} style={{marginBottom:9,textAlign:'left'}}>
-                <div style={{display:'flex',justifyContent:'space-between',marginBottom:3}}>
-                  <span className="nn" style={{fontSize:12,color:'#7B73B8'}}>{DIMS[d]}</span>
-                  <span className="mm" style={{fontSize:11,color:'#7B73B8'}}>🔒</span>
-                </div>
-                <div style={{height:5,background:'rgba(37,30,92,.4)',borderRadius:99}}/>
-              </div>
-            ))}
-          </div>
-        )}
+        {m.xtra==='preview'&&<MilestonePartialRadar scores={scores}/>}
         {m.body&&<p className="nn" style={{fontSize:13,color:'#7B73B8',marginBottom:20,lineHeight:1.5}}>{m.body}</p>}
         {m.btnTxt&&(
           <button className="gb sq" onClick={onCont} style={{background:`linear-gradient(135deg,${m.color},${m.color}CC)`,border:'none',borderRadius:12,padding:'13px 24px',fontSize:15,fontWeight:700,color:num===2?'#0A0818':'#fff',cursor:'pointer',width:'100%',boxShadow:`0 4px 20px ${m.color}38`}}>
@@ -452,10 +418,8 @@ function Result({arc,scores,xp,onReset}){
   ]
   const co=arc.color
   const isLowSeverity=!!arc.lowSeverity
-  const bridgeText=isLowSeverity
-    ?'Seu TDAH se manifesta de forma mais sutil — o que frequentemente significa que você desenvolveu habilidades de compensação ao longo dos anos. Isso tem um custo que muitas vezes só você percebe.'
-    :arc.bridge
-  const coRgb=co==='#8B5CF6'?'139,92,246':co==='#EF4444'?'239,68,68':co==='#F59E0B'?'245,158,11':co==='#10B981'?'16,185,129':co==='#EC4899'?'236,72,153':'34,211,238'
+  const bridgeText=isLowSeverity?LOW_SEVERITY_BRIDGE:arc.bridge
+  const coRgb=arc.coRgb||'34,211,238'
   const scrollToCta=()=>{
     if(typeof document==='undefined')return
     const el=document.getElementById('result-cta')
