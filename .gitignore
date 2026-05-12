@@ -1,0 +1,103 @@
+# =========================================================
+# .gitignore — Planner TDAH
+# Ticket: KAN-10 / FOUNDATION-4
+# =========================================================
+
+# -------- Node / npm / pnpm / yarn --------
+node_modules/
+.npm/
+.yarn/
+.pnp.*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json.bak
+.pnpm-debug.log*
+
+# -------- Vite / build outputs --------
+dist/
+build/
+.vite/
+*.tsbuildinfo
+
+# -------- Environment / secrets --------
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+.secrets/
+secrets.*
+
+# -------- Logs --------
+*.log
+logs/
+lerna-debug.log*
+
+# -------- OS / Editors --------
+.DS_Store
+Thumbs.db
+desktop.ini
+ehthumbs.db
+$RECYCLE.BIN/
+.idea/
+.vscode/
+!.vscode/extensions.json
+*.swp
+*.swo
+*~
+
+# -------- Caches --------
+.cache/
+.parcel-cache/
+.turbo/
+.next/
+.nuxt/
+.svelte-kit/
+
+# -------- Test / coverage --------
+coverage/
+.nyc_output/
+*.lcov
+junit.xml
+
+# -------- Playwright (raiz) --------
+playwright-report/
+test-results/
+.playwright-browsers/
+.playwright-mcp/
+
+# -------- Auditoria: screenshots de QA local --------
+audit-*.png
+landing-*.png
+q1-*.png
+result-*.png
+*-resized.png
+
+# -------- PDF gerado / arquivos locais --------
+print.pdf
+*.local.pdf
+
+# -------- Zone Identifier (Windows downloads) --------
+*:Zone.Identifier
+
+# -------- Lockfiles (manter package-lock.json mas ignorar variantes) --------
+yarn.lock
+pnpm-lock.yaml
+
+# -------- Documentos pessoais / drafts não-versionados --------
+drafts/
+.notes/
+SCRATCH.md
+ifood-orders-schema.html
+
+# -------- Claude Code: settings local (per-machine), não compartilhar --------
+.claude/settings.local.json
+.claude/.credentials.json
+.claude/projects/
+.claude/todos/
+.claude/shell-snapshots/
+.claude/statsig/

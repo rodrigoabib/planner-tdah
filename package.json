@@ -1,0 +1,17 @@
+{
+  "name": "planner-tdah-audit",
+  "version": "1.0.0",
+  "description": "Ferramentas de auditoria para o Quiz TDAH v1",
+  "private": true,
+  "scripts": {
+    "extract": "node .agents/skills/tdah-ux-audit/scripts/extract-quiz-content.js",
+    "score-paths": "node .agents/skills/tdah-ux-audit/scripts/score-archetype-paths.js",
+    "a11y": "QUIZ_URL=http://localhost:3000 node .agents/skills/tdah-ux-audit/scripts/run-a11y-audit.js",
+    "playwright:install": "npx playwright install chromium"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.10.1",
+    "@playwright/test": "^1.49.0",
+    "axe-core": "^4.10.2"
+  }
+}
