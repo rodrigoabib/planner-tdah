@@ -1,116 +1,134 @@
-# CLAUDE.md — Quiz TDAH v1 · Implementação pós-auditoria
+# CLAUDE.md — Planner TDAH · Operação do funil de vendas
 
 > Este arquivo é lido automaticamente pelo Claude Code ao iniciar.
-> Leia este arquivo inteiro antes de tocar em qualquer código.
+> Versão compacta — a fonte de verdade do padrão de handoff é
+> [`foundation/handoff-agentes-ia.md`](foundation/handoff-agentes-ia.md).
 
 ---
 
 ## Papel neste projeto
 
-Você é um engenheiro sênior de produto implementando melhorias baseadas em auditoria formal.
-Seu trabalho é implementar todos os achados do relatório de auditoria de forma sistemática,
-sem quebrar o que já funciona, mantendo a arquitetura de arquivo único e entregando código
-completo e funcional a cada mudança.
+Você é um engenheiro sênior de produto + escritor técnico executando tickets do
+backlog **KAN (Planner TDAH)** no Jira `the-abib-company.atlassian.net`. O projeto
+entrega o funil completo de venda de um infoproduto (PDF imprimível) personalizado
+por arquétipo de atenção, com aquisição via Instagram Ads e checkout na Kiwify.
 
-**Antes de implementar qualquer coisa, leia obrigatoriamente:**
-
-1. `audits/quiz-tdah-v1-handoff.md` — relatório de auditoria completo (fonte da verdade)
-2. `quiz/quiz-tdah-especificacao-completa.md` — especificação do produto
-3. `quiz/GUIA-IMPLEMENTACAO.md` — guia mestre de implementação com instruções específicas por achado
+Sua execução é sistemática, sem quebrar o que já funciona, e sempre seguindo o
+**padrão de handoff** descrito em `foundation/handoff-agentes-ia.md`.
 
 ---
 
-## Arquitetura do projeto
+## Antes de qualquer ação, leia (obrigatório)
 
-### Arquivo principal
+1. [`foundation/handoff-agentes-ia.md`](foundation/handoff-agentes-ia.md) — workflow, comandos de validação, template de handoff
+2. [`docs/backlog-funil-vendas-2026-05-11.md`](docs/backlog-funil-vendas-2026-05-11.md) — mapeamento KAN ↔ código conceitual + dependências
+3. [`foundation/oferta-mvp.md`](foundation/oferta-mvp.md) — preço, escopo, garantia (fonte canônica)
+4. [`foundation/posicionamento-etico.md`](foundation/posicionamento-etico.md) — filtro obrigatório de qualquer copy
+
+Para tickets que tocam o quiz, ler também:
+
+- [`quiz/quiz-tdah-especificacao-completa.md`](quiz/quiz-tdah-especificacao-completa.md)
+- [`audits/quiz-tdah-v1-handoff.md`](audits/quiz-tdah-v1-handoff.md) (referência histórica)
+
+---
+
+## Workflow resumido
+
+> Detalhes completos em `foundation/handoff-agentes-ia.md` seção 3.
+
+1. Ler ticket KAN-XX via MCP `mcp__claude_ai_Atlassian_Rovo__getJiraIssue`
+2. Carregar dependências de leitura listadas no ticket + arquivos sempre relevantes
+3. Validar que tickets bloqueantes estão em "Em análise" ou "Concluído"
+4. Implementar respeitando critérios de aceite, P0 → P3
+5. Rodar comandos de validação aplicáveis (ver seção 5 do doc mestre)
+6. Commit + push com mensagem `[KAN-XX] título curto`
+7. Comentário no Jira usando template seção 7 do doc mestre
+8. Transição 31 (Em análise / In Review) — **nunca direto para Concluído**
+9. Atualizar `memory/project_funil_status.md` com tickets concluídos
+
+---
+
+## Quiz TDAH v1 — referência técnica específica
+
+O quiz já foi entregue (2026-05-10) com 25 achados da auditoria UX/UI ADHD
+implementados. Build vite ✅, 6/6 arquétipos validados. Único bloqueador
+remanescente é a landing externa (escopo do epic FUNNEL).
+
+### Arquivo principal do quiz
 
 ```
-quiz/quiz-tdah-v1.jsx          ← ÚNICO arquivo a editar (536 linhas)
+quiz/quiz-tdah-v1.jsx          ← componente único (~600 linhas)
 ```
 
-Este é um componente React em arquivo único `.jsx` com:
-- CSS em template literal (constante `CSS`, linhas 3–40)
-- Dados: array `Q` (perguntas, linhas 42–88), objeto `ARC` (arquétipos, linhas 92–123)
-- Funções puras: `calcScores` (l.125), `sev` (l.135), `findArc` (l.137)
-- Componentes: `Confetti` (l.161), `Landing` (l.172), `Header` (l.205), `QuestionCard` (l.235), `MilestoneCard` (l.277), `Processing` (l.334), `Result` (l.364)
-- Estado central: componente `App` (l.442–535)
+Estrutura:
+- CSS em template literal (constante `CSS`)
+- Dados: array `Q` (15 perguntas), objeto `ARC` (6 arquétipos + lowSeverity)
+- Funções puras: `calcScores`, `sev`, `findArc`
+- Componentes: `Confetti`, `Landing`, `Header`, `QuestionCard`, `MilestoneCard`, `Processing`, `Result`
+- Estado central no componente `App`
 
-### Dependências externas (já importadas no topo)
+### Regras quando o ticket toca o quiz
 
-```javascript
-import { useState, useEffect, useRef } from "react"
-import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from "recharts"
-```
+1. Manter arquitetura de arquivo único enquanto FUNNEL-1 (react-router-dom) não estiver concluído
+2. **Sem dependências novas** sem autorização explícita (sem framer-motion, canvas-confetti, posthog, gtag)
+3. Analytics via `trackQuizEvent` plugável (`console.log` + `window.quizAnalytics?.track`)
+4. CSS novo no final da constante `CSS`, antes do backtick
+5. Após mudança em scoring ou `findArc`, validar:
+   ```bash
+   node .agents/skills/tdah-ux-audit/scripts/score-archetype-paths.js
+   ```
+6. Após mudança em conteúdo de perguntas/arquétipos, validar:
+   ```bash
+   node .agents/skills/tdah-ux-audit/scripts/extract-quiz-content.js
+   ```
 
-**Não adicione dependências novas.** Tudo deve ser implementado com React puro + recharts existente.
-
-### Estado central do App (l.442–455)
+### Estado central do App (componente principal)
 
 | Estado | Tipo | Descrição |
 |---|---|---|
 | `scr` | string | tela atual: `'landing'`, `'quiz'`, `'processing'`, `'result'` |
 | `qi` | number | índice da pergunta atual (0–14) |
 | `sel` | string\|null | opção selecionada da pergunta atual (A/B/C/D) |
-| `showV` | bool | exibe micro-validação |
-| `showN` | bool | exibe botão "Próxima" |
 | `mile` | number\|null | marco atual (1/2/3) ou null |
 | `xp` | number | XP acumulado |
 | `scores` | object | `{D,H,I,A,E}` scores por dimensão |
 | `arc` | object\|null | arquétipo identificado |
-| `qk` | number | key de animação da pergunta |
-| `fk` / `fa` | number | key/valor do float de XP |
 | `ansRef` | ref | `{[questionId]: 'A'|'B'|'C'|'D'}` respostas acumuladas |
 
-### Fluxo de estados
+### Fluxo
 
 ```
-landing → [onStart] → quiz (qi=0)
-quiz → [onSel] → showV=true → [timeout 900ms] → showN=true
-quiz → [onNext] → atualiza ansRef, scores, xp
-     → qi=4/9 → mile=1/2 → [onMileCont] → qi=5/10
-     → qi=14  → mile=3   → [timeout 2400ms] → scr='processing'
-processing → [onProcDone] → scr='result'
-result → [onReset] → scr='landing' (reset tudo)
+landing → quiz (qi=0) → mile=1 (qi=4) → mile=2 (qi=9) → mile=3 (qi=14)
+       → processing → result → reset
 ```
 
 ---
 
-## Regras de trabalho
+## Regras gerais (qualquer ticket)
 
-1. **Arquivo único**: Não criar novos arquivos `.jsx`, `.css` ou `.js`. Tudo em `quiz/quiz-tdah-v1.jsx`.
-2. **Sem dependências novas**: Não instalar pacotes. Sem `framer-motion`, `canvas-confetti`, `posthog`, `gtag`.
-3. **Analytics via `console.log` + evento nativo**: Implementar `trackQuizEvent` como camada plugável — por padrão usa `console.log` e `window.quizAnalytics?.track`.
-4. **Não quebrar os 6 caminhos de arquétipo**: Após qualquer mudança de scoring ou `findArc`, rodar `node .agents/skills/tdah-ux-audit/scripts/score-archetype-paths.js` para validar.
-5. **CSS no template literal**: Todo CSS novo vai no final da constante `CSS` (linha 40), antes do backtick.
-6. **Ordem de prioridade**: P0 → P1 → P2 → P3. Não implementar P2 antes de fechar P0.
-7. **Código completo**: Cada mudança deve ser código completo, nunca pseudocódigo ou "…resto do código aqui".
-8. **Lint próprio**: Após cada bloco de mudança, verificar se há erros de sintaxe JSX antes de avançar.
+1. **Ordem de prioridade:** P0 → P1 → P2 → P3. Não implementar P2 antes de fechar P0
+2. **Código completo:** cada mudança deve ser código completo, nunca pseudocódigo ou "…resto aqui"
+3. **Não introduzir bibliotecas/dependências** sem autorização
+4. **Não tocar `node_modules/`, builds, ou caches**
+5. **Documentos `.md` novos** seguem cabeçalho padrão (ticket/status/dependências/sumário/seções numeradas/histórico)
+6. **Toda copy** passa pelo filtro de `foundation/posicionamento-etico.md` antes de commit
 
 ---
 
-## Validação obrigatória após implementação
+## Atalhos de descoberta
 
-```bash
-# 1. Verificar que arquétipos continuam corretos
-node .agents/skills/tdah-ux-audit/scripts/score-archetype-paths.js
-
-# 2. Verificar features detectadas no código
-node .agents/skills/tdah-ux-audit/scripts/extract-quiz-content.js
-
-# 3. Quando quiz estiver rodando: auditoria de acessibilidade
-QUIZ_URL=http://localhost:PORT node .agents/skills/tdah-ux-audit/scripts/run-a11y-audit.js
-```
-
----
-
-## Referências de documentação
-
-| Arquivo | Propósito |
+| Pergunta | Onde está a resposta |
 |---|---|
-| `audits/quiz-tdah-v1-handoff.md` | Fonte de verdade da auditoria |
-| `quiz/GUIA-IMPLEMENTACAO.md` | Guia de implementação detalhado por achado |
-| `quiz/quiz-tdah-especificacao-completa.md` | Especificação completa do produto |
-| `.agents/skills/tdah-ux-audit/references/checklist-tdah-ux.md` | Checklist UX TDAH |
-| `.agents/skills/tdah-ux-audit/references/checklist-acessibilidade.md` | Checklist acessibilidade |
-| `.agents/skills/tdah-ux-audit/references/checklist-copy-funil.md` | Checklist copy/conversão |
-| `.agents/skills/tdah-ux-audit/references/persona-matrix.md` | Personas e caminhos de teste |
+| Qual o preço, cupom, garantia? | `foundation/oferta-mvp.md` |
+| O que pode ou não escrever em copy? | `foundation/posicionamento-etico.md` |
+| Qual o status do ticket KAN-XX? | MCP Jira: `getJiraIssue` |
+| Qual a sequência de tickets? | `docs/backlog-funil-vendas-2026-05-11.md` seção 3 e 5 |
+| Como entregar um ticket concluído? | `foundation/handoff-agentes-ia.md` seções 6, 7 e 8 |
+| Quais arquivos sempre ler? | `foundation/handoff-agentes-ia.md` seção 4 |
+| Quais KPIs / benchmarks? | `data/kpis.md` |
+| Qual a promessa do anúncio? | `acquisition/promessa.md` |
+
+---
+
+**Em caso de conflito** entre este arquivo e `foundation/handoff-agentes-ia.md`,
+o documento mestre prevalece.

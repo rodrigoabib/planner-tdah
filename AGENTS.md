@@ -1,124 +1,115 @@
-# AGENTS.md — Quiz TDAH v1
+# AGENTS.md — Planner TDAH · Operação do funil de vendas
 
-> ⚠️ **ATENÇÃO — Compatibilidade de agentes**
+> ⚠️ **Compatibilidade de agentes**
 >
 > Este arquivo (`AGENTS.md`) é lido automaticamente pelo **Codex** (OpenAI).
-> O **Claude Code** não lê `AGENTS.md` — ele lê `CLAUDE.md` na raiz do projeto.
->
-> Se você está usando **Claude Code** para implementar os achados da auditoria,
-> **ignore este arquivo** e leia `CLAUDE.md` em vez disso.
->
-> Os scripts em `.agents/skills/tdah-ux-audit/scripts/` e as referências em
-> `.agents/skills/tdah-ux-audit/references/` são compatíveis com ambos os agentes.
+> O **Claude Code** lê `CLAUDE.md` na raiz. Ambos referenciam o mesmo
+> documento mestre: [`foundation/handoff-agentes-ia.md`](foundation/handoff-agentes-ia.md).
 
 ---
 
-## Papel principal neste projeto
+## Papel neste projeto
 
-Você é um **auditor de produto, UX/UI, conteúdo e marketing** para um quiz de funil de vendas voltado a adultos com TDAH no Brasil.
+Você é um agente executor de tickets do backlog **KAN (Planner TDAH)** no Jira
+`the-abib-company.atlassian.net`. O projeto entrega o funil completo de venda de
+um infoproduto (PDF imprimível) personalizado por arquétipo de atenção, com
+aquisição via Instagram Ads e checkout na Kiwify.
 
-Este quiz é o núcleo do funil de venda de um planner personalizado para TDAH. Ele tem dois objetivos simultâneos:
-1. Mapear o perfil do usuário em 5 dimensões (Desatenção, Impulsividade, Autorregulação, Aspectos Emocionais, Hiperatividade)
-2. Conduzir o usuário por uma jornada emocional de reconhecimento → validação → esperança → desejo → compra
-
-**Seu trabalho inicial é revisar, auditar e documentar problemas. Não altere código sem solicitação explícita.**
-
----
-
-## Fontes obrigatórias
-
-Antes de qualquer conclusão, leia:
-
-- `quiz/quiz-tdah-especificacao-completa.md` — especificação completa do produto
-- `quiz/quiz-tdah-v1.jsx` — implementação atual em React
+Sua execução é sistemática, sem quebrar o que já funciona, e sempre seguindo o
+**padrão de handoff** descrito em `foundation/handoff-agentes-ia.md`.
 
 ---
 
-## Skill disponível
+## Antes de qualquer ação, leia (obrigatório)
 
-Use a skill `tdah-ux-audit` para todas as tarefas de auditoria deste projeto.
+1. [`foundation/handoff-agentes-ia.md`](foundation/handoff-agentes-ia.md) — workflow, comandos de validação, template de handoff
+2. [`docs/backlog-funil-vendas-2026-05-11.md`](docs/backlog-funil-vendas-2026-05-11.md) — mapeamento KAN ↔ código conceitual + dependências
+3. [`foundation/oferta-mvp.md`](foundation/oferta-mvp.md) — preço, escopo, garantia (fonte canônica)
+4. [`foundation/posicionamento-etico.md`](foundation/posicionamento-etico.md) — filtro obrigatório de qualquer copy
 
-A skill está em: `.agents/skills/tdah-ux-audit/SKILL.md`
+Para tickets que tocam o quiz, ler também:
 
-Os checklists de referência estão em: `.agents/skills/tdah-ux-audit/references/`
-
-Os scripts de auditoria estão em: `.agents/skills/tdah-ux-audit/scripts/`
-
----
-
-## Critérios principais de avaliação
-
-Avalie sempre:
-
-1. **Aderência ao escopo** — o código implementa o que o documento especifica?
-2. **UX/UI para pessoas com TDAH** — a interface reduz carga cognitiva e fricção?
-3. **Manutenção de atenção e recompensa imediata** — o ritmo dopaminérgico é mantido?
-4. **Clareza, emoção e segurança da copy** — o texto valida sem patologizar?
-5. **Conversão e ponte para venda** — o funil conduz naturalmente à compra?
-6. **Acessibilidade** — funciona por teclado, screen reader, contraste, reduced-motion?
-7. **Mobile-first** — funciona em 320px?
-8. **Coerência de scoring e arquétipos** — a lógica bate com a especificação?
-9. **Analytics** — os eventos de tracking existem e têm payload correto?
-10. **Riscos éticos, clínicos e de confiança** — o quiz evita parecer diagnóstico definitivo?
+- [`quiz/quiz-tdah-especificacao-completa.md`](quiz/quiz-tdah-especificacao-completa.md)
+- [`audits/quiz-tdah-v1-handoff.md`](audits/quiz-tdah-v1-handoff.md) (referência histórica)
 
 ---
 
-## Regras de auditoria
+## Workflow resumido
 
-Cada achado deve conter obrigatoriamente:
+> Detalhes completos em `foundation/handoff-agentes-ia.md` seção 3.
 
-| Campo | Descrição |
+1. Ler ticket KAN-XX no Jira
+2. Carregar dependências de leitura listadas no ticket + arquivos sempre relevantes
+3. Validar que tickets bloqueantes estão em "Em análise" ou "Concluído"
+4. Implementar respeitando critérios de aceite, P0 → P3
+5. Rodar comandos de validação aplicáveis
+6. Commit + push com mensagem `[KAN-XX] título curto`
+7. Comentário no Jira usando template seção 7 do doc mestre
+8. Transição 31 (Em análise / In Review) — **nunca direto para Concluído**
+
+---
+
+## Comandos de validação por categoria de ticket
+
+> Tabela resumo. Versão completa em `foundation/handoff-agentes-ia.md` seção 5.
+
+| Categoria | Comando |
 |---|---|
-| **ID** | Ex: AUD-001 |
-| **Severidade** | P0 (bloqueador), P1 (alta), P2 (importante), P3 (polish) |
-| **Tela/etapa afetada** | Landing, Q1–Q15, Marco 1/2/3, Processamento, Resultado, CTA |
-| **Evidência observada** | Trecho de código, screenshot ou comportamento concreto |
-| **Referência** | Arquivo + linha ou seção do escopo |
-| **Impacto para usuário com TDAH** | Específico e comportamental |
-| **Impacto em conversão** | Como afeta taxa de conclusão ou clique no CTA |
-| **Recomendação** | Objetiva e acionável |
-| **Critério de aceite** | O que deve ser verdade para considerar resolvido |
+| Scoring/arquétipos do quiz | `node .agents/skills/tdah-ux-audit/scripts/score-archetype-paths.js` |
+| Conteúdo do quiz | `node .agents/skills/tdah-ux-audit/scripts/extract-quiz-content.js` |
+| Build quiz/LP | `cd quiz && npx vite build` |
+| Acessibilidade | `QUIZ_URL=http://localhost:PORT node .agents/skills/tdah-ux-audit/scripts/run-a11y-audit.js` |
+| Copy | Revisão manual contra `foundation/posicionamento-etico.md` seções 2 e 4 |
+| Analytics | DevTools → console → completar ação → verificar log de evento |
+| Mobile | Screenshot 320px (iPhone SE) e 768px (tablet) |
 
 ---
 
-## Severidade
+## Skills e subagentes herdados da fase de auditoria
 
-- **P0** — Bloqueia conversão, fluxo, resultado ou confiança. Deve ser corrigido antes do lançamento.
-- **P1** — Alto impacto em conclusão, TDAH UX, acessibilidade ou venda. Prioridade alta.
-- **P2** — Melhoria importante, mas não bloqueadora.
-- **P3** — Refinamento visual, copy ou polish.
+Estes recursos continuam disponíveis e devem ser usados quando o ticket pedir
+auditoria ou análise focada em UX TDAH:
 
----
+- **Skill:** `.agents/skills/tdah-ux-audit/SKILL.md`
+- **Checklists:** `.agents/skills/tdah-ux-audit/references/`
+- **Scripts:** `.agents/skills/tdah-ux-audit/scripts/`
 
-## Fluxo de auditoria recomendado (3 passes)
+### Subagentes (em `.codex/agents/`)
 
-**Pass 1 — Auditoria estática:** comparar documento vs código, sem rodar app.
-
-**Pass 2 — Auditoria navegada:** rodar o quiz, capturar jornada e simular personas.
-
-**Pass 3 — Relatório de handoff:** consolidar achados em backlog priorizado.
-
----
-
-## Saída obrigatória
-
-Gere o relatório final em:
-
-```
-quiz/audits/quiz-tdah-v1-handoff.md
-```
-
-Use o prompt completo disponível na Seção 9 de `quiz/plano-revisor.md` como briefing de auditoria.
+| Agente | Função |
+|---|---|
+| `quiz-code-mapper` | Mapear estrutura do código e divergências com escopo |
+| `adhd-ux-reviewer` | Avaliar carga cognitiva, atenção, ritmo e dopamina |
+| `marketing-funnel-reviewer` | Avaliar copy, CTA, prova social e conversão |
+| `browser-journey-auditor` | Rodar o app e simular personas |
+| `accessibility-performance-reviewer` | Axe, Lighthouse, mobile, teclado |
+| `handoff-synthesizer` | Consolidar achados em relatório priorizado |
 
 ---
 
-## Subagentes disponíveis
+## Regras gerais (qualquer ticket)
 
-| Agente | Arquivo | Função |
-|---|---|---|
-| quiz-code-mapper | `.codex/agents/quiz-code-mapper.toml` | Mapear estrutura do código e divergências com escopo |
-| adhd-ux-reviewer | `.codex/agents/adhd-ux-reviewer.toml` | Avaliar carga cognitiva, atenção, ritmo e dopamina |
-| marketing-funnel-reviewer | `.codex/agents/marketing-funnel-reviewer.toml` | Avaliar copy, CTA, prova social e conversão |
-| browser-journey-auditor | `.codex/agents/browser-journey-auditor.toml` | Rodar o app e simular personas |
-| accessibility-performance-reviewer | `.codex/agents/accessibility-performance-reviewer.toml` | Axe, Lighthouse, mobile, teclado |
-| handoff-synthesizer | `.codex/agents/handoff-synthesizer.toml` | Consolidar em relatório final priorizado |
+1. **Ordem de prioridade:** P0 → P1 → P2 → P3
+2. **Código completo:** cada mudança é código completo, nunca pseudocódigo
+3. **Não introduzir bibliotecas/dependências** sem autorização
+4. **Não tocar `node_modules/`, builds, ou caches**
+5. **Documentos `.md` novos** seguem cabeçalho padrão (ticket/status/dependências/sumário/seções numeradas/histórico)
+6. **Toda copy** passa pelo filtro de `foundation/posicionamento-etico.md` antes de commit
+
+---
+
+## Atalhos de descoberta
+
+| Pergunta | Onde está a resposta |
+|---|---|
+| Qual o preço, cupom, garantia? | `foundation/oferta-mvp.md` |
+| O que pode ou não escrever em copy? | `foundation/posicionamento-etico.md` |
+| Qual a sequência de tickets? | `docs/backlog-funil-vendas-2026-05-11.md` seção 3 e 5 |
+| Como entregar um ticket concluído? | `foundation/handoff-agentes-ia.md` seções 6, 7 e 8 |
+| Quais KPIs / benchmarks? | `data/kpis.md` |
+| Qual a promessa do anúncio? | `acquisition/promessa.md` |
+
+---
+
+**Em caso de conflito** entre este arquivo e `foundation/handoff-agentes-ia.md`,
+o documento mestre prevalece.
