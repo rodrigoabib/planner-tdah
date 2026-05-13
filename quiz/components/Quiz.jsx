@@ -655,8 +655,14 @@ export default function Quiz(){
     } else if (qi === 14) {
         const finalArc = findArc(ns)
         const totalXp = Object.values(xpDeltaRef.current).reduce((acc, v) => acc + v, 0)
+        const totalQuizTimeMs = Date.now() - appStartRef.current
+        // KAN-48 (DATA-4): persistir duração total do quiz para Landing.jsx
+        // calcular timeOnQuiz no evento lp_viewed sem precisar de prop drilling.
+        if (typeof window !== 'undefined' && window.localStorage) {
+          try { window.localStorage.setItem('quizTotalTimeMs', String(totalQuizTimeMs)) } catch (_) {}
+        }
         trackQuizEvent('milestone_reached', { milestoneId: 3, scoresPartial: ns, xpEarned: mileBonus })
-        trackQuizEvent('quiz_completed', {archetypeId: finalArc?.name, scores: ns, xpEarned: totalXp })
+        trackQuizEvent('quiz_completed', {archetypeId: finalArc?.name, scores: ns, xpEarned: totalXp, totalTimeMs: totalQuizTimeMs })
         setMile(3)
         setTimeout(() => { setMile(null); setScr('processing') }, 2400)
       } else {

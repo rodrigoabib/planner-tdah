@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import {
   SLUG_TO_ARCHETYPE,
@@ -9,6 +9,32 @@ import {
 } from '../data/archetypes.js'
 import { getCouponSession, buildCheckoutUrl, getStoredUtms } from '../coupon.js'
 import CouponCountdown from './CouponCountdown.jsx'
+
+// KAN-48 (DATA-4): helper de tracking unificado. Usa window.quizAnalytics.track (montado em main.jsx)
+// que já enriquece com sessionId, UTMs e viewport. Fallback noop se analytics não carregou.
+function trackLandingEvent(eventName, payload = {}) {
+  if (typeof window === 'undefined') return
+  if (window.quizAnalytics?.track) {
+    window.quizAnalytics.track(eventName, payload)
+  }
+}
+
+function readQuizTotalTimeMs() {
+  if (typeof window === 'undefined' || !window.localStorage) return null
+  try {
+    const raw = window.localStorage.getItem('quizTotalTimeMs')
+    if (!raw) return null
+    const n = Number(raw)
+    return Number.isFinite(n) && n > 0 ? n : null
+  } catch (_) {
+    return null
+  }
+}
+
+function couponStatusOf(session) {
+  if (!session) return 'none'
+  return session.isExpired ? 'expired' : 'valid'
+}
 
 const LANDING_CSS = `
 @import url('https://cdn.jsdelivr.net/npm/@fontsource/syne@5/index.css');
@@ -282,7 +308,7 @@ function FaqAccordion() {
   )
 }
 
-function CtaSection({ arc, session, utms }) {
+function CtaSection({ arc, session, utms, onCtaClick }) {
   const co = arc.color
   const couponActive = session && !session.isExpired
   const expired = session && session.isExpired
@@ -334,6 +360,7 @@ function CtaSection({ arc, session, utms }) {
           href={checkoutUrl}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() => onCtaClick && onCtaClick(displayPrice)}
           className="lp-cta-btn lp-sq"
           style={{
             display: 'block',
@@ -388,6 +415,14 @@ export default function Landing() {
   const [session, setSession] = useState(() => (typeof window === 'undefined' ? null : getCouponSession()))
   const [utms] = useState(() => (typeof window === 'undefined' ? {} : getStoredUtms()))
 
+  // KAN-48 (DATA-4): mount timestamp para calcular timeOnLandingMs em eventos posteriores.
+  const mountedAtRef = useRef(typeof window === 'undefined' ? 0 : Date.now())
+  // Guards para garantir disparos únicos (apenas uma vez por sessão de landing).
+  const lpViewedRef = useRef(false)
+  const scroll50Ref = useRef(false)
+  const scroll100Ref = useRef(false)
+  const couponExpiredFiredRef = useRef(false)
+
   // Re-checa a sessão se a janela voltar do background (caso o cupom tenha expirado enquanto inativo).
   useEffect(() => {
     if (typeof document === 'undefined') return
@@ -400,11 +435,84 @@ export default function Landing() {
     return () => document.removeEventListener('visibilitychange', handleVisibility)
   }, [])
 
+  // KAN-48: lp_viewed na primeira renderização válida (arquétipo encontrado).
+  useEffect(() => {
+    if (!data) return
+    if (lpViewedRef.current) return
+    lpViewedRef.current = true
+    trackLandingEvent('lp_viewed', {
+      archetypeSlug: slug,
+      couponStatus: couponStatusOf(session),
+      timeOnQuiz: readQuizTotalTimeMs()
+    })
+  }, [data, slug, session])
+
+  // KAN-48: scroll percentage (50% e 100%) — dispara uma vez cada.
+  useEffect(() => {
+    if (!data) return
+    if (typeof window === 'undefined') return
+    const onScroll = () => {
+      const docHeight = Math.max(
+        document.body?.scrollHeight || 0,
+        document.documentElement?.scrollHeight || 0
+      )
+      if (docHeight <= 0) return
+      const scrolled = (window.scrollY + window.innerHeight) / docHeight
+      if (!scroll50Ref.current && scrolled >= 0.5) {
+        scroll50Ref.current = true
+        trackLandingEvent('lp_scrolled_50', { archetypeSlug: slug })
+      }
+      if (!scroll100Ref.current && scrolled >= 0.95) {
+        scroll100Ref.current = true
+        trackLandingEvent('lp_scrolled_100', {
+          archetypeSlug: slug,
+          timeOnLandingMs: Date.now() - mountedAtRef.current
+        })
+      }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [data, slug])
+
+  // KAN-48: lp_coupon_expired — dispara uma única vez quando o cupom expira durante a visita.
+  useEffect(() => {
+    if (!data) return
+    if (couponExpiredFiredRef.current) return
+    if (!session) return
+    // Se já chegou expirado ao montar, não disparamos (não expirou "enquanto estava na landing").
+    if (session.isExpired) {
+      couponExpiredFiredRef.current = true
+      return
+    }
+    const id = setInterval(() => {
+      const current = getCouponSession()
+      if (current && current.isExpired && !couponExpiredFiredRef.current) {
+        couponExpiredFiredRef.current = true
+        trackLandingEvent('lp_coupon_expired', {
+          archetypeSlug: slug,
+          timeOnLandingMs: Date.now() - mountedAtRef.current
+        })
+        setSession(current)
+        clearInterval(id)
+      }
+    }, 1000)
+    return () => clearInterval(id)
+  }, [data, session, slug])
+
   if (!data) {
     return <NotFoundView />
   }
 
   const { arc, lowSeverity } = data
+
+  const handleCtaClick = (priceShown) => {
+    trackLandingEvent('lp_cta_clicked', {
+      archetypeSlug: slug,
+      couponStatus: couponStatusOf(session),
+      priceShown,
+      timeOnLandingMs: Date.now() - mountedAtRef.current
+    })
+  }
 
   return (
     <div style={{ background: C.bg, minHeight: '100vh' }}>
@@ -426,7 +534,7 @@ export default function Landing() {
         <GuaranteeSection />
         {/* Seção 7 (prova social) intencionalmente omitida na v1 — FOUNDATION-2 §3 proíbe placeholders/depoimentos não-reais. */}
         <FaqAccordion />
-        <CtaSection arc={arc} session={session} utms={utms} />
+        <CtaSection arc={arc} session={session} utms={utms} onCtaClick={handleCtaClick} />
         <DisclaimerSection />
       </main>
     </div>

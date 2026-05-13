@@ -101,3 +101,9 @@ ifood-orders-schema.html
 .claude/todos/
 .claude/shell-snapshots/
 .claude/statsig/
+
+# -------- Codex: artefatos temporários (prompts e logs de execução BG) --------
+.codex-*.txt
+.codex-*.log
+.codex-*.out
+.codex-*.json
