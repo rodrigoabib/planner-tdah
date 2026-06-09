@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulação MEI — 3 cenários de CNAE · Planner TDAH</title>
+<style>
+  :root{
+    --bg:#0f1115; --card:#1a1d24; --card2:#21252e; --ink:#eef1f6; --mut:#9aa3b2;
+    --line:#2c313c; --green:#3ecf8e; --greenbg:#10301f; --amber:#f5b14c; --amberbg:#3a2c12;
+    --red:#ff6b6b; --redbg:#3a1818; --blue:#6aa7ff; --bluebg:#16243f; --accent:#b794f6;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;line-height:1.55;padding:32px 18px}
+  .wrap{max-width:1000px;margin:0 auto}
+  h1{font-size:26px;margin:0 0 4px}
+  .sub{color:var(--mut);font-size:14px;margin-bottom:24px}
+  h2{font-size:19px;margin:36px 0 12px;border-left:4px solid var(--accent);padding-left:10px}
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:18px 0}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
+  .card .tag{font-size:11px;letter-spacing:.5px;text-transform:uppercase;color:var(--mut)}
+  .card h3{margin:6px 0 10px;font-size:16px}
+  .pill{display:inline-block;font-size:11px;padding:2px 8px;border-radius:20px;margin:2px 2px 2px 0}
+  .p-com{background:var(--bluebg);color:var(--blue)}
+  .p-serv{background:var(--amberbg);color:var(--amber)}
+  .price{font-size:30px;font-weight:700;margin:12px 0 2px}
+  .price small{font-size:14px;font-weight:400;color:var(--mut)}
+  .winner{border-color:var(--green);box-shadow:0 0 0 1px var(--green) inset}
+  .badge{position:relative;top:-2px;font-size:11px;background:var(--green);color:#04150c;font-weight:700;padding:2px 8px;border-radius:20px;margin-left:6px}
+  table{width:100%;border-collapse:collapse;margin:8px 0 4px;font-size:14px;background:var(--card);border-radius:12px;overflow:hidden}
+  th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--line)}
+  th{background:var(--card2);color:var(--mut);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.4px}
+  td.num{text-align:right;font-variant-numeric:tabular-nums}
+  tr:last-child td{border-bottom:none}
+  .hl-green{color:var(--green);font-weight:700}
+  .hl-red{color:var(--red);font-weight:700}
+  .same{color:var(--amber);font-weight:600}
+  .callout{border-radius:12px;padding:14px 16px;margin:14px 0;font-size:14px;border:1px solid}
+  .c-key{background:var(--greenbg);border-color:var(--green)}
+  .c-warn{background:var(--amberbg);border-color:var(--amber)}
+  .c-info{background:var(--bluebg);border-color:var(--blue)}
+  .c-key b,.c-warn b,.c-info b{color:#fff}
+  .bars{margin:10px 0}
+  .barrow{display:flex;align-items:center;gap:10px;margin:8px 0;font-size:13px}
+  .barrow .lbl{width:130px;color:var(--mut)}
+  .bar{height:22px;border-radius:6px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;color:#04150c;font-weight:700;font-size:12px}
+  .foot{color:var(--mut);font-size:12px;margin-top:6px}
+  ul{margin:6px 0 6px 0;padding-left:20px}
+  li{margin:4px 0}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:720px){.cards{grid-template-columns:1fr}.grid2{grid-template-columns:1fr}.barrow .lbl{width:90px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>Simulação MEI — 3 cenários de CNAE</h1>
+  <div class="sub">Planner TDAH · valores oficiais 2026 (salário mínimo R$ 1.621) · feito para Rodrigo</div>
+
+  <div class="callout c-key">
+    <b>A regra de ouro que muda tudo:</b> no MEI o valor do DAS <b>não depende</b> de qual CNAE é principal ou secundário.
+    O sistema soma: <b>INSS fixo (R$ 81,05)</b> + <b>R$ 1,00</b> se houver qualquer atividade de <b>comércio/indústria</b> + <b>R$ 5,00</b> se houver qualquer atividade de <b>serviço</b>.
+    Ou seja: ter o CNAE de "treinamento" (serviço) <b>em qualquer posição</b> já adiciona R$ 5/mês.
+  </div>
+
+  <h2>Os 3 cenários</h2>
+  <div class="cards">
+    <div class="card">
+      <div class="tag">Cenário A</div>
+      <h3>Treinamento como principal</h3>
+      <span class="pill p-serv">8599-6/04 serviço · principal</span>
+      <span class="pill p-com">5811-5/00 comércio</span>
+      <span class="pill p-com">4761-0/01 comércio</span>
+      <div class="price">R$ 87,05<small> /mês</small></div>
+      <div class="foot">Comércio + Serviço → INSS + R$1 + R$5</div>
+    </div>
+    <div class="card">
+      <div class="tag">Cenário B</div>
+      <h3>Editor principal + treinamento secundário</h3>
+      <span class="pill p-com">5811-5/00 comércio · principal</span>
+      <span class="pill p-serv">8599-6/04 serviço</span>
+      <span class="pill p-com">4761-0/01 comércio</span>
+      <div class="price">R$ 87,05<small> /mês</small></div>
+      <div class="foot">Comércio + Serviço → INSS + R$1 + R$5</div>
+    </div>
+    <div class="card winner">
+      <div class="tag">Cenário C <span class="badge">RECOMENDADO</span></div>
+      <h3>Só livro (editor + livreiro)</h3>
+      <span class="pill p-com">5811-5/00 comércio · principal</span>
+      <span class="pill p-com">4761-0/01 comércio</span>
+      <div class="price hl-green">R$ 82,05<small> /mês</small></div>
+      <div class="foot">Só comércio/indústria → INSS + R$1</div>
+    </div>
+  </div>
+
+  <div class="callout c-warn">
+    <b>Descoberta nº1:</b> os cenários <b>A e B custam exatamente o mesmo</b> (R$ 87,05/mês). Trocar o "treinamento" de principal para secundário <b>não economiza nada</b> no DAS — porque o R$ 5 de serviço entra do mesmo jeito.
+  </div>
+
+  <h2>Custo acumulado ao longo do tempo</h2>
+  <table>
+    <thead>
+      <tr><th>Momento</th><th class="num">Cenário A</th><th class="num">Cenário B</th><th class="num">Cenário C ✓</th><th class="num">Você economiza com C</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Após 1 mês</td><td class="num">R$ 87,05</td><td class="num">R$ 87,05</td><td class="num hl-green">R$ 82,05</td><td class="num">R$ 5,00</td></tr>
+      <tr><td>Após 3 meses</td><td class="num">R$ 261,15</td><td class="num">R$ 261,15</td><td class="num hl-green">R$ 246,15</td><td class="num">R$ 15,00</td></tr>
+      <tr><td>Após 6 meses</td><td class="num">R$ 522,30</td><td class="num">R$ 522,30</td><td class="num hl-green">R$ 492,30</td><td class="num">R$ 30,00</td></tr>
+      <tr><td>Após 1 ano</td><td class="num">R$ 1.044,60</td><td class="num">R$ 1.044,60</td><td class="num hl-green">R$ 984,60</td><td class="num">R$ 60,00</td></tr>
+      <tr><td>Após 2 anos*</td><td class="num">R$ 2.155,32</td><td class="num">R$ 2.155,32</td><td class="num hl-green">R$ 2.035,32</td><td class="num">R$ 120,00</td></tr>
+    </tbody>
+  </table>
+  <div class="foot">* Ano 1 com valores oficiais 2026. Ano 2 estimado com reajuste do salário mínimo (~6,8% sobre a parcela do INSS — apenas ilustrativo, o valor real sai em jan/2027). A <b>diferença</b> entre os cenários é sempre os R$ 5/mês de ISS, independente do reajuste.</div>
+
+  <div class="bars">
+    <div class="barrow"><span class="lbl">A / B (2 anos)</span><div class="bar" style="width:86%;background:var(--amber)">R$ 2.155</div></div>
+    <div class="barrow"><span class="lbl">C (2 anos)</span><div class="bar" style="width:81%;background:var(--green)">R$ 2.035</div></div>
+  </div>
+
+  <div class="callout c-info">
+    <b>Descoberta nº2:</b> a diferença de custo é pequena — no máximo <b>R$ 120 em 2 anos</b>. Então a decisão <b>não é sobre dinheiro do DAS</b>. É sobre <b>risco e imunidade tributária</b> (abaixo). Esse é o ponto que realmente importa.
+  </div>
+
+  <h2>O que realmente decide: imunidade e risco</h2>
+  <div class="grid2">
+    <div class="card">
+      <h3 style="color:var(--green)">✓ Cenário C — só livro</h3>
+      <ul>
+        <li><b>Imunidade de livro</b> (STF) preservada: e-book/livro não tem ICMS.</li>
+        <li>Atividade descrita com <b>precisão</b>: você vende um PDF/livro digital.</li>
+        <li>Enquadramento <b>limpo</b> — menor risco de questionamento ou bloqueio na plataforma.</li>
+        <li>DAS mais barato (só R$1 de ICMS).</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3 style="color:var(--amber)">⚠ Cenários A e B — com treinamento</h3>
+      <ul>
+        <li><b>Curso/treinamento NÃO tem imunidade</b> (o STF excluiu cursos).</li>
+        <li>Carrega um CNAE de serviço que <b>não descreve</b> seu produto (é PDF, não curso ao vivo).</li>
+        <li>Em A, a atividade <b>principal</b> é um serviço tributado — pior posicionamento fiscal.</li>
+        <li>Só faz sentido <b>se um dia</b> você vender mentoria/curso ao vivo de verdade.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout c-key">
+    <b>Veredito:</b> fique no <b>Cenário C</b> (Editor de livros 5811-5/00 principal + Livreiro 4761-0/01 secundário) enquanto seu produto for o PDF.
+    Adicione o <b>8599-6/04 (treinamento)</b> só quando lançar mentoria/curso real — é simples incluir depois, e aí os R$ 5/mês passam a fazer sentido.
+  </div>
+
+  <h2>Lembretes importantes (1ª vez no MEI)</h2>
+  <ul>
+    <li><b>O DAS é fixo.</b> Vendendo R$ 2.500 ou R$ 6.700 no mês, você paga o mesmo valor — não existe % sobre o faturamento no MEI (dentro do limite de R$ 81 mil/ano).</li>
+    <li><b>Não está incluído aqui:</b> taxas da Kiwify/Hotmart (~9%) — elas são iguais nos 3 cenários, então não mudam a comparação.</li>
+    <li><b>Ponto a confirmar com contador:</b> a classificação exata (ICMS vs ISS) do "Editor de livros" pode variar; se o sistema marcar como serviço, o Cenário C iria a R$ 86,05 — ainda assim mais barato e mais limpo que A/B.</li>
+  </ul>
+
+</div>
+</body>
+</html>
