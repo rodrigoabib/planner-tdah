@@ -53,8 +53,9 @@ A v1 deve sair como **um sistema base sólido + 3 a 5 páginas únicas por arqu�
 | Templates semanais reutilizáveis | [BASE] | 6 |
 | Templates mensais reutilizáveis | [BASE] | 3 |
 | Banco de capturas soltas | [BASE] | 3 |
+| Modo Recomeço: retomada depois de dias parado + banco de micro-ações | [BASE] | 3 |
 | Página de fechamento: como continuar usando | [BASE] | 1 |
-| **Total estimado por PDF** |  | **49-50** |
+| **Total estimado por PDF** |  | **52-53** |
 
 **Decisão editorial:** o bônus separado "Comece em 15 minutos" continua pertencendo ao escopo de PRODUCT-7, mas a v1 do planner inclui uma versão curta interna de 2 páginas para reduzir fricção no primeiro uso.
 
@@ -114,6 +115,7 @@ Diretrizes fixas por arquétipo:
 | Data | Versão | Mudança | Autor |
 |---|---|---|---|
 | 2026-05-12 | 1.0 | Documento inicial da estrutura modular do planner v1 | Rodrigo Abib + Codex |
+| 2026-06-10 | 1.1 | Adicionado capítulo [BASE] "Modo Recomeço" (retomada pós-pausa + banco de micro-ações por energia/tempo/contexto), sustentado pelo discovery Reddit (rotina rígida que quebra: 127 registros; culpa após falha: 39; antiabandono transversal em `research/outputs/03` §7 e `05` §4). Total por PDF: 49-50 → 52-53. | Claude Code |
 
 ---
 

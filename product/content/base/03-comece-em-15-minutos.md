@@ -69,3 +69,5 @@ Marque um pequeno sinal de começo:
 [ ] Eu escolhi uma intenção para amanhã.
 
 Pronto. O primeiro uso já aconteceu. Amanhã, abra o planner e procure apenas o próximo campo útil.
+
+Uma última coisa, dita desde já: se em algum momento você ficar dias sem abrir o planner, está tudo bem — existe uma página feita para esse retorno, o **Modo Recomeço** (`12-modo-recomeco.md`). Nenhuma pausa cancela o que você começou hoje.

@@ -1,6 +1,6 @@
 # Consolidado - VARIANTS
 
-> Arquivo gerado automaticamente em: `2026-05-14 20:56:59`
+> Arquivo gerado automaticamente em: `2026-06-10 02:52:02`
 > Origem: `product/content/variants`
 
 ---

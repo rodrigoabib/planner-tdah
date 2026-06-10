@@ -23,7 +23,9 @@ export const ARC = {
       'A sensação de que o tempo passou sem você perceber é constante e frustrante.'
     ],
     bridge:
-      'Planners lineares assumem que você vai lembrar de olhar para eles. O seu planner precisa de âncoras temporais visuais, captura rápida e lembretes contextuais — para que o mundo externo te alcance antes que o tempo escape.'
+      'Planners lineares assumem que você vai lembrar de olhar para eles. O seu planner precisa de âncoras temporais visuais, captura rápida e lembretes contextuais — para que o mundo externo te alcance antes que o tempo escape.',
+    adjust:
+      'Âncoras visuais e lembretes contextuais para trazer o plano de volta ao seu campo de visão — sem depender só da memória.'
   },
   reator: {
     sym: '▲',
@@ -45,7 +47,9 @@ export const ARC = {
       'Manter qualquer coisa consistente por mais de algumas semanas é uma luta real.'
     ],
     bridge:
-      'Planners tradicionais ignoram que você tem energia de sobra mas freio insuficiente. O seu planner precisa de speed bumps intencionais — pausas antes de decisões grandes e checkpoints de consistência.'
+      'Planners tradicionais ignoram que você tem energia de sobra mas freio insuficiente. O seu planner precisa de speed bumps intencionais — pausas antes de decisões grandes e checkpoints de consistência.',
+    adjust:
+      'Pausas intencionais antes de decisões grandes e checkpoints simples para transformar energia inicial em continuidade.'
   },
   vulcao: {
     sym: '◆',
@@ -67,7 +71,9 @@ export const ARC = {
       'Depois de um erro, retomar pode levar dias que custam muito.'
     ],
     bridge:
-      'Planners que não reconhecem estados emocionais falham nos seus dias difíceis. O seu planner precisa de check-ins de humor, dias de buffer e estrutura adaptável ao estado do dia.'
+      'Planners que não reconhecem estados emocionais falham nos seus dias difíceis. O seu planner precisa de check-ins de humor, dias de buffer e estrutura adaptável ao estado do dia.',
+    adjust:
+      'Check-in de humor antes de planejar, para escolher o tamanho realista do dia — versão mínima, média ou completa.'
   },
   arquiteto: {
     sym: '⬡',
@@ -89,7 +95,9 @@ export const ARC = {
       'A sensação de quase lá sem nunca chegar lá é real, frequente e frustrante.'
     ],
     bridge:
-      'Planners vazios só multiplicam o caos — você precisa de andaime, não de espaço em branco. O seu planner quebra visões grandes em micro-ações e tem captura de ideias que não sabota o que está em execução.'
+      'Planners vazios só multiplicam o caos — você precisa de andaime, não de espaço em branco. O seu planner quebra visões grandes em micro-ações e tem captura de ideias que não sabota o que está em execução.',
+    adjust:
+      'Visões grandes quebradas em micro-ações e uma inbox de ideias separada do plano em execução.'
   },
   furacao: {
     sym: '✦',
@@ -111,7 +119,9 @@ export const ARC = {
       'Manter qualquer rotina é uma luta real — não por falta de vontade.'
     ],
     bridge:
-      'Qualquer sistema com muitas etapas vai falhar com você. O seu planner precisa ser radical em simplicidade — 1-3 prioridades absolutas por dia, reset fácil, zero punição por dias ruins.'
+      'Qualquer sistema com muitas etapas vai falhar com você. O seu planner precisa ser radical em simplicidade — 1-3 prioridades absolutas por dia, reset fácil, zero punição por dias ruins.',
+    adjust:
+      'Dia limitado a 1-3 prioridades absolutas, com reset fácil e sem punição quando o plano estourar.'
   },
   camaleao: {
     sym: '◑',
@@ -126,14 +136,16 @@ export const ARC = {
     reco: [
       'Você funciona. Só você sabe exatamente o custo disso.',
       'Desenvolveu sistemas, compensações e máscaras — e ninguém percebe o esforço.',
-      'Provavelmente foi diagnosticado tarde, ou ainda não foi. Sempre se virou foi o obstáculo.'
+      'Provavelmente passou anos sem ter um nome para esse padrão. "Sempre se virou" foi o obstáculo.'
     ],
     cost: [
       'O burnout acumulado por anos de sobresforço invisível chega de forma súbita.',
-      'A sensação de que aos outros parece fácil pode ser mais pesada que qualquer sintoma.'
+      'A sensação de que para os outros parece fácil pode ser o peso mais difícil desse padrão.'
     ],
     bridge:
-      'Você não precisa de mais exigência — precisa de permissão para funcionar de forma sustentável. O seu planner reconhece que fazer menos bem feito é muitas vezes o movimento mais inteligente do dia.'
+      'Você não precisa de mais exigência — precisa de permissão para funcionar de forma sustentável. O seu planner reconhece que fazer menos bem feito é muitas vezes o movimento mais inteligente do dia.',
+    adjust:
+      'Dias mínimos permitidos, pausas sem culpa e retomada sem compensação excessiva.'
   }
 }
 
@@ -142,6 +154,36 @@ export const ARC = {
 // quando a landing é acessada pelo slug "manutencao".
 export const LOW_SEVERITY_BRIDGE =
   "Seu padrão de atenção se manifesta de forma mais sutil — o que frequentemente significa que você desenvolveu habilidades de compensação ao longo dos anos. Isso tem um custo que muitas vezes só você percebe."
+
+// Ajuste de método específico da variação lowSeverity (substitui arc.adjust na landing /planner/manutencao).
+export const LOW_SEVERITY_ADJUST =
+  'Estrutura leve de manutenção: ritual diário em versão curta e baixa carga de preenchimento — estrutura suficiente, não perfeita.'
+
+// Como o método do planner responde às fricções mais recorrentes do discovery
+// (research/outputs/01 §6 e 03 §7): baixo atrito, captura, revisão leve e retomada sem culpa.
+// Conteúdo BASE da landing — igual para todos os arquétipos.
+export const METHOD_PILLARS = [
+  {
+    icon: '◎',
+    title: 'Até 3 prioridades reais por dia',
+    desc: 'Cada uma com uma versão mínima para os dias em que a energia não colabora. Lista curta que cabe no dia, não lista infinita que vira cobrança.'
+  },
+  {
+    icon: '✎',
+    title: 'Captura rápida para esvaziar a cabeça',
+    desc: 'Ideias, pendências e preocupações saem da mente e vão para um lugar visível — sem precisar decidir nada na hora.'
+  },
+  {
+    icon: '↻',
+    title: 'Revisão semanal leve, sem auditoria',
+    desc: '20 minutos para fechar ciclos abertos e escolher o foco da próxima semana. Reentrada, não prestação de contas.'
+  },
+  {
+    icon: '☀',
+    title: 'Modo Recomeço para quando você sumir',
+    desc: 'Ficou dias (ou semanas) sem abrir? Há uma página para voltar em 10 minutos: sem preencher retroativo, sem reler nada, sem culpa.'
+  }
+]
 
 // Mapa de slug de URL → arquétipo (lookup para a rota /planner/:slug).
 // "manutencao" é o slug dedicado para a variação lowSeverity.

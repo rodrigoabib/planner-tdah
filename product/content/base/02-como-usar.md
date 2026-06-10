@@ -61,4 +61,4 @@ Você só precisa fazer quatro passos:
 3. Fazer uma captura de cinco itens.
 4. Escrever a intenção do dia de amanhã.
 
-Depois disso, o planner já começou. Amanhã você abre no ritual diário e escolhe três prioridades reais. Se esquecer por alguns dias, volte pela captura. Retomada também é parte do método.
+Depois disso, o planner já começou. Amanhã você abre no ritual diário e escolhe três prioridades reais. Se esquecer por alguns dias — ou semanas —, abra direto no **Modo Recomeço** (`12-modo-recomeco.md`). Retomada não é exceção do método: é parte dele.

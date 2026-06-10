@@ -73,6 +73,8 @@ Use este reset de 5 minutos:
 
 Você não precisa transformar um dia torto em dívida para amanhã. Revisar é ajustar, não se punir.
 
+Se a pausa não foi de horas, mas de dias ou semanas, este reset não é o caminho — use o **Modo Recomeço** (`12-modo-recomeco.md`), que foi feito para retomadas maiores.
+
 ## 5. Template preenchível
 
 **Data:** ____ / ____ / ________

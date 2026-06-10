@@ -3,6 +3,8 @@ import { useParams, Link } from 'react-router-dom'
 import {
   SLUG_TO_ARCHETYPE,
   LOW_SEVERITY_BRIDGE,
+  LOW_SEVERITY_ADJUST,
+  METHOD_PILLARS,
   OFFER,
   LANDING_BENEFITS,
   FAQ
@@ -197,6 +199,40 @@ function ProposalSection({ arc, lowSeverity }) {
           {bridge}
         </p>
       </div>
+    </section>
+  )
+}
+
+function MethodSection({ arc, lowSeverity }) {
+  const co = arc.color
+  const adjust = lowSeverity ? LOW_SEVERITY_ADJUST : arc.adjust
+  return (
+    <section className="lp-fade" style={{ padding: '0 20px 36px', maxWidth: 620, margin: '0 auto' }}>
+      <h2 className="lp-sq" style={{ fontSize: 'clamp(18px,4.5vw,22px)', fontWeight: 800, color: C.textHi, marginBottom: 8 }}>
+        Como o planner trabalha a seu favor
+      </h2>
+      <p className="lp-nn" style={{ fontSize: 14, color: C.textLow, lineHeight: 1.6, marginBottom: 18 }}>
+        O método inteiro foi desenhado para o ciclo real: começar pequeno, perder o fio às vezes e voltar sem drama.
+      </p>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 16 }}>
+        {METHOD_PILLARS.map((p, i) => (
+          <div key={i} style={{ background: C.card, border: `1px solid ${C.cardBorder}`, borderRadius: 12, padding: '14px 16px', display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+            <span aria-hidden="true" className="lp-mm" style={{ color: C.accent, fontSize: 18, lineHeight: 1.2, flexShrink: 0 }}>{p.icon}</span>
+            <div>
+              <p className="lp-nn" style={{ fontSize: 14, fontWeight: 700, color: C.textHi, margin: '0 0 4px 0', lineHeight: 1.4 }}>{p.title}</p>
+              <p className="lp-nn" style={{ fontSize: 13, color: C.textLow, lineHeight: 1.55, margin: 0 }}>{p.desc}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+      {adjust && (
+        <div style={{ background: `rgba(${arc.coRgb},.10)`, border: `1px solid ${co}40`, borderLeft: `4px solid ${co}`, borderRadius: 12, padding: '14px 16px' }}>
+          <p className="lp-mm" style={{ fontSize: 10, color: co, letterSpacing: '.14em', textTransform: 'uppercase', marginBottom: 6 }}>
+            Ajustado para o seu perfil
+          </p>
+          <p className="lp-nn" style={{ fontSize: 14, color: C.textMid, lineHeight: 1.6, margin: 0 }}>{adjust}</p>
+        </div>
+      )}
     </section>
   )
 }
@@ -530,6 +566,7 @@ export default function Landing() {
         <YouAreLikeSection arc={arc} />
         <CostSection arc={arc} />
         <ProposalSection arc={arc} lowSeverity={lowSeverity} />
+        <MethodSection arc={arc} lowSeverity={lowSeverity} />
         <BenefitsSection arc={arc} />
         <GuaranteeSection />
         {/* Seção 7 (prova social) intencionalmente omitida na v1 — FOUNDATION-2 §3 proíbe placeholders/depoimentos não-reais. */}

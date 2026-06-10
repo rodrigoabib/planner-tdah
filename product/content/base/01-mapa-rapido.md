@@ -56,6 +56,9 @@ Três páginas para mapear ciclos maiores. Cada template inclui palavra-guia, tr
 **Banco de capturas soltas**  
 Uma inbox aberta com 60 linhas numeradas. Use para descarregar o que está disputando espaço mental e processar depois com calma.
 
+**Modo Recomeço**  
+A página para quando você ficar dias ou semanas sem abrir o planner. Sem preencher retroativo, sem reler nada, sem compensar: um ritual de 10 minutos e um banco de micro-ações para voltar pelo menor passo possível.
+
 **Fechamento**  
 Uma página para encerrar o ciclo sem encarar isso como ponto final. Ela orienta como continuar: reimprimir, recomeçar, recomprar ou compartilhar o resultado.
 
@@ -69,3 +72,5 @@ Use a rota mínima:
 4. Escreva a intenção do dia de amanhã.
 
 Isso já conta como começo. O planner foi feito para aceitar retomadas, ciclos incompletos e dias em que só uma página é suficiente.
+
+E se você voltou depois de um tempo parado: pule tudo e vá direto para o **Modo Recomeço**. Ele existe exatamente para isso.

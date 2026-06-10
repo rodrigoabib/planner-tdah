@@ -1,6 +1,6 @@
 # Conteúdo base do Planner TDAH
 **Tipo:** [BASE]  
-**Páginas estimadas:** 48  
+**Páginas estimadas:** 51  
 **Status:** Aprovado v1.0 — 2026-05-12
 
 ## 1. Índice produzido
@@ -21,7 +21,8 @@ Este diretório reúne o miolo comum do Planner TDAH v1. São as páginas iguais
 | `09-templates-semanais.md` | Templates semanais reutilizáveis | 6 | Aprovado v1.0 — 2026-05-12 |
 | `10-templates-mensais.md` | Templates mensais reutilizáveis | 3 | Aprovado v1.0 — 2026-05-12 |
 | `11-banco-de-capturas.md` | Banco de capturas soltas | 3 | Aprovado v1.0 — 2026-05-12 |
-| `12-fechamento.md` | Página de fechamento | 1 | Aprovado v1.0 — 2026-05-12 |
+| `12-modo-recomeco.md` | Modo Recomeço (retomada pós-pausa + banco de micro-ações) | 3 | Em análise v1.0 — 2026-06-10 |
+| `13-fechamento.md` | Página de fechamento | 1 | Aprovado v1.0 — 2026-05-12 |
 
 ## 2. Briefing de tom aplicado
 
