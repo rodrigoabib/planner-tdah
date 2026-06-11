@@ -17,7 +17,14 @@
  */
 
 const { chromium } = require('@playwright/test');
-const { checkA11y, injectAxe, getViolations } = require('@axe-core/playwright');
+// @axe-core/playwright >= 4.x expõe AxeBuilder (injectAxe/getViolations eram do pacote axe-playwright,
+// que não está instalado). Corrigido em KAN-133 para casar com a dependência real do package.json.
+const { AxeBuilder } = require('@axe-core/playwright');
+
+async function collectViolations(page, tags) {
+  const results = await new AxeBuilder({ page }).withTags(tags).analyze();
+  return results.violations;
+}
 const fs = require('fs');
 const path = require('path');
 
@@ -89,12 +96,8 @@ async function runAudit() {
         continue;
       }
 
-      await injectAxe(page);
-
       // Testa tela inicial (landing/entrada do quiz)
-      const landingViolations = await getViolations(page, null, {
-        runOnly: ['wcag2a', 'wcag2aa', 'best-practice'],
-      });
+      const landingViolations = await collectViolations(page, ['wcag2a', 'wcag2aa', 'best-practice']);
 
       // Tenta responder a primeira pergunta (se existir)
       let questionViolations = [];
@@ -103,10 +106,7 @@ async function runAudit() {
         if (startBtn) {
           await startBtn.click();
           await page.waitForTimeout(600);
-          await injectAxe(page);
-          questionViolations = await getViolations(page, null, {
-            runOnly: ['wcag2a', 'wcag2aa'],
-          });
+          questionViolations = await collectViolations(page, ['wcag2a', 'wcag2aa']);
         }
       } catch (_) {
         // ignora se não conseguir navegar
@@ -140,10 +140,7 @@ ${formatViolations(questionViolations, `Q1 @ ${viewport.name}`)}`);
       try {
         await reducedMotionPage.emulateMedia({ reducedMotion: 'reduce' });
         await reducedMotionPage.goto(QUIZ_URL, { waitUntil: 'networkidle', timeout: 10000 });
-        await injectAxe(reducedMotionPage);
-        const rmViolations = await getViolations(reducedMotionPage, null, {
-          runOnly: ['wcag2a', 'wcag2aa'],
-        });
+        const rmViolations = await collectViolations(reducedMotionPage, ['wcag2a', 'wcag2aa']);
         if (rmViolations.length > 0) {
           reportSections.push(`#### Reduced Motion @ ${viewport.name} — ${rmViolations.length} violação(ões)\n\n${formatViolations(rmViolations, 'reduced-motion')}`);
         }

@@ -1,0 +1,198 @@
+{
+  "generatedAt": "2026-06-11T12:22:50.356Z",
+  "baseUrl": "http://localhost:5199",
+  "tags": [
+    "wcag2a",
+    "wcag2aa"
+  ],
+  "totals": {
+    "critical": 0,
+    "serious": 0,
+    "moderate": 0,
+    "minor": 0
+  },
+  "keyboardEndToEnd": true,
+  "pageErrors": [],
+  "scans": [
+    {
+      "label": "intro@320",
+      "count": 0,
+      "violations": []
+    },
+    {
+      "label": "landing-sem-cupom@320",
+      "count": 0,
+      "violations": []
+    },
+    {
+      "label": "obrigado@320",
+      "count": 0,
+      "violations": []
+    },
+    {
+      "label": "termos@320",
+      "count": 0,
+      "violations": []
+    },
+    {
+      "label": "privacidade@320",
+      "count": 0,
+      "violations": []
+    },
+    {
+      "label": "reembolso@320",
+      "count": 0,
+      "violations": []
+    },
+    {
+      "label": "q1@320",
+      "count": 0,
+      "violations": []
+    },
+    {
+      "label": "intro@390",
+      "count": 0,
+      "violations": []
+    },
+    {
+      "label": "landing-sem-cupom@390",
+      "count": 0,
+      "violations": []
+    },
+    {
+      "label": "obrigado@390",
+      "count": 0,
+      "violations": []
+    },
+    {
+      "label": "termos@390",
+      "count": 0,
+      "violations": []
+    },
+    {
+      "label": "privacidade@390",
+      "count": 0,
+      "violations": []
+    },
+    {
+      "label": "reembolso@390",
+      "count": 0,
+      "violations": []
+    },
+    {
+      "label": "q1@390",
+      "count": 0,
+      "violations": []
+    },
+    {
+      "label": "intro@768",
+      "count": 0,
+      "violations": []
+    },
+    {
+      "label": "landing-sem-cupom@768",
+      "count": 0,
+      "violations": []
+    },
+    {
+      "label": "obrigado@768",
+      "count": 0,
+      "violations": []
+    },
+    {
+      "label": "termos@768",
+      "count": 0,
+      "violations": []
+    },
+    {
+      "label": "privacidade@768",
+      "count": 0,
+      "violations": []
+    },
+    {
+      "label": "reembolso@768",
+      "count": 0,
+      "violations": []
+    },
+    {
+      "label": "q1@768",
+      "count": 0,
+      "violations": []
+    },
+    {
+      "label": "intro@1280",
+      "count": 0,
+      "violations": []
+    },
+    {
+      "label": "landing-sem-cupom@1280",
+      "count": 0,
+      "violations": []
+    },
+    {
+      "label": "obrigado@1280",
+      "count": 0,
+      "violations": []
+    },
+    {
+      "label": "termos@1280",
+      "count": 0,
+      "violations": []
+    },
+    {
+      "label": "privacidade@1280",
+      "count": 0,
+      "violations": []
+    },
+    {
+      "label": "reembolso@1280",
+      "count": 0,
+      "violations": []
+    },
+    {
+      "label": "q1@1280",
+      "count": 0,
+      "violations": []
+    },
+    {
+      "label": "marco2@320",
+      "count": 0,
+      "violations": []
+    },
+    {
+      "label": "resultado@320",
+      "count": 0,
+      "violations": []
+    },
+    {
+      "label": "landing-cupom-valido@320",
+      "count": 0,
+      "violations": []
+    },
+    {
+      "label": "landing-cupom-expirado@320",
+      "count": 0,
+      "violations": []
+    },
+    {
+      "label": "marco2@1280",
+      "count": 0,
+      "violations": []
+    },
+    {
+      "label": "resultado@1280",
+      "count": 0,
+      "violations": []
+    },
+    {
+      "label": "landing-cupom-valido@1280",
+      "count": 0,
+      "violations": []
+    },
+    {
+      "label": "landing-cupom-expirado@1280",
+      "count": 0,
+      "violations": []
+    }
+  ]
+}
