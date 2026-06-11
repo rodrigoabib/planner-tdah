@@ -173,6 +173,18 @@ function Confetti({on}){
   )
 }
 
+// KAN-132 (FUNNEL-10): rodapé legal discreto exigido pelo gate L1 (links em "/" e "/planner/:slug").
+function LegalFooter({className,style}){
+  const linkStyle={fontSize:12,color:'#9892C4',textDecoration:'underline'}
+  return(
+    <nav aria-label="Legal" className={`nn${className?` ${className}`:''}`} style={{display:'flex',justifyContent:'center',gap:14,flexWrap:'wrap',marginTop:18,...style}}>
+      <Link to="/termos-de-uso" style={linkStyle}>Termos de Uso</Link>
+      <Link to="/politica-de-privacidade" style={linkStyle}>Privacidade</Link>
+      <Link to="/politica-de-reembolso" style={linkStyle}>Reembolso</Link>
+    </nav>
+  )
+}
+
 function IntroScreen({onStart}){
   return(
     <div style={{background:'#0A0818',minHeight:620,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:'32px 20px',position:'relative',overflow:'hidden'}}>
@@ -200,8 +212,9 @@ function IntroScreen({onStart}){
           Descobrir meu padrão →
         </button>
         <p className="fi d6 nn" style={{fontSize:13,color:'#9892C4',marginTop:10,lineHeight:1.55,padding:'0 8px'}}>
-          Este quiz mapeia padrões de atenção e organização. Não é uma ferramenta clínica e não substitui avaliação profissional.
+          Esta é uma ferramenta de autoavaliação. Não é uma ferramenta clínica e não substitui avaliação por psicólogo, psiquiatra ou neurologista.
         </p>
+        <LegalFooter className="fi d7"/>
       </div>
     </div>
   )
@@ -499,6 +512,9 @@ function Result({arc,scores,xp,onReset}){
             ))}
           </div>
         </div>
+        <p className="nn" style={{fontSize:13,color:'#9892C4',textAlign:'center',lineHeight:1.55,padding:'0 8px',marginBottom:12}}>
+          Esse resultado é um mapeamento de padrão de atenção, não um diagnóstico. Para avaliação clínica, procure um(a) profissional.
+        </p>
         <Link
           id="result-cta"
           to={isLowSeverity?'/planner/manutencao':(arc.ctaUrl||`/planner/${arc.slug||'furacao'}`)}
@@ -513,9 +529,6 @@ function Result({arc,scores,xp,onReset}){
         >
           Quero meu Planner {arc.name} →
         </Link>
-        <p className="nn" style={{fontSize:13,color:'#9892C4',textAlign:'center',lineHeight:1.55,padding:'0 8px',marginBottom:14}}>
-          Este é um questionário de autoconhecimento sobre padrões de atenção. Não é uma ferramenta clínica e não substitui avaliação por psicólogo, psiquiatra ou neurologista.
-        </p>
         <button className="ghb nn" onClick={onReset} style={{background:'transparent',border:'1px solid #251E5C',borderRadius:12,padding:'11px',fontSize:13,color:'#9892C4',cursor:'pointer',width:'100%'}}>
           Refazer o quiz
         </button>
@@ -532,6 +545,7 @@ function Result({arc,scores,xp,onReset}){
             Compartilhar meu perfil
           </button>
         )}
+        <LegalFooter/>
       </div>
     </div>
   )

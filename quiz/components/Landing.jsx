@@ -392,6 +392,10 @@ function CtaSection({ arc, session, utms, onCtaClick }) {
             Preço regular. Para liberar o cupom de R$ 20 de desconto, complete o quiz primeiro: <Link to="/" style={{ color: C.accent, textDecoration: 'underline' }}>fazer o quiz</Link>.
           </p>
         )}
+        {/* KAN-132 (FUNNEL-10): disclaimer canônico de venda (posicionamento-etico.md §4.5) acima do botão de compra. */}
+        <p className="lp-nn" style={{ fontSize: 13, color: C.textLow, lineHeight: 1.5, marginBottom: 12 }}>
+          Produto educacional. Não é substituto de tratamento, terapia ou medicação.
+        </p>
         <a
           href={checkoutUrl}
           target="_blank"

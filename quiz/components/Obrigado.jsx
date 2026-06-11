@@ -128,7 +128,7 @@ export default function Obrigado() {
           <p style={{ fontSize: 13, color: C.textLow, lineHeight: 1.55, margin: 0 }}>
             Suporte por e-mail · resposta em até 24 horas úteis.
             <br />
-            (Endereço definitivo será publicado em <Link to="/termos-de-uso" style={{ color: C.accent, textDecoration: 'underline' }}>Termos de Uso</Link> após FOUNDATION-3 / KAN-9 com placeholders preenchidos.)
+            O endereço de suporte está no e-mail de entrega da Kiwify e nos <Link to="/termos-de-uso" style={{ color: C.accent, textDecoration: 'underline' }}>Termos de Uso</Link>.
           </p>
         </section>
 
