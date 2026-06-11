@@ -25,7 +25,7 @@
 
 ## 1. Resultado em uma linha
 
-**Zero violações axe (critical/serious/moderate/minor) em todas as 38 varreduras; quiz completável só com teclado da intro ao resultado; estados de cupom válido/expirado funcionando; 0 erros de console.** Os itens F1/F2/L2 do gate ACQ-11 ganham evidência fresca e arquivada.
+**Zero violações axe (critical/serious/moderate/minor) em todas as 36 varreduras; quiz completável só com teclado da intro ao resultado; estados de cupom válido/expirado funcionando; 0 erros de console.** Os itens F1/F2/L2 do gate ACQ-11 ganham evidência fresca e arquivada.
 
 ## 2. Método e cobertura
 
@@ -54,7 +54,7 @@
 | 🟡 Moderate | **0** |
 | ⚪ Minor | **0** |
 
-Detalhe por varredura em `audits/funnel-v1_2-axe-results.json` (38 scans, todos com `count: 0`). O script canônico (`run-a11y-audit.js`, intro+Q1 nos 4 viewports, incluindo `prefers-reduced-motion`) também fechou em 0 após a correção da API (§6.1).
+Detalhe por varredura em `audits/funnel-v1_2-axe-results.json` (36 scans, todos com `count: 0`). O script canônico (`run-a11y-audit.js`, intro+Q1 nos 4 viewports, incluindo `prefers-reduced-motion`) também fechou em 0 após a correção da API (§6.1).
 
 Nota: o axe marca como "incomplete" (não-violação) o texto sobreposto ao gradiente do cabeçalho do resultado — contraste sobre gradiente não é computável automaticamente. Verificação manual: os tokens usados (`#9892C4`, `#C4BFF0` sobre `#0A0818`/`#120F2D`) ficam entre 6.4:1 e 9:1.
 
@@ -90,7 +90,7 @@ Spot-checks visuais nos screenshots: radar parcial do Marco 2 com cadeados nas d
 ## 7. Evidências arquivadas
 
 - **Screenshots (22):** `audits/screenshots/funnel-v1_2/` — `intro`, `q1`, `marco2`, `resultado`, `landing-sem-cupom`, `landing-cupom-valido`, `landing-cupom-expirado`, `obrigado`, `termos`, `privacidade`, `reembolso`, `teclado-resultado` (320px de todas; 768/1280 das principais). Os 320px servem ao item F1 do gate.
-- **Resultados axe (JSON):** `audits/funnel-v1_2-axe-results.json` (38 scans + flag `keyboardEndToEnd: true` + `pageErrors: []`).
+- **Resultados axe (JSON):** `audits/funnel-v1_2-axe-results.json` (36 scans + flag `keyboardEndToEnd: true` + `pageErrors: []`).
 - **Relatório do script canônico:** `.agents/quiz/audits/a11y-report.md`.
 - **Screenshots do KAN-132:** `audits/screenshots/kan132-*.png` (estado pós-saneamento).
 
@@ -104,7 +104,7 @@ Spot-checks visuais nos screenshots: radar parcial do Marco 2 com cadeados nas d
 
 | Data | Versão | Mudança | Autor |
 |---|---|---|---|
-| 2026-06-11 | 1.0 | Re-auditoria pós-KAN-132: 38 scans axe zerados, teclado E2E ✅, correção do script canônico, novo script de funil | Claude Code (Fable 5) |
+| 2026-06-11 | 1.0 | Re-auditoria pós-KAN-132: 36 scans axe zerados, teclado E2E ✅, correção do script canônico, novo script de funil | Claude Code (Fable 5) |
 
 ---
 
