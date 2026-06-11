@@ -70,11 +70,12 @@ test-results/
 .playwright-browsers/
 .playwright-mcp/
 
-# -------- Auditoria: screenshots de QA local --------
-audit-*.png
-landing-*.png
-q1-*.png
-result-*.png
+# -------- Auditoria: screenshots de QA local (apenas raiz; evidência arquivada vive em audits/screenshots/) --------
+/audit-*.png
+/landing-*.png
+/q1-*.png
+/result-*.png
+/kan*-*.png
 *-resized.png
 
 # -------- PDF gerado / arquivos locais --------
