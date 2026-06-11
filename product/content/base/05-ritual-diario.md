@@ -1,7 +1,7 @@
 # Ritual Diário
 **Tipo:** [BASE]  
 **Páginas estimadas:** 4  
-**Status:** Aprovado v1.0 — 2026-05-12
+**Status:** v1.1 — 2026-06-11 (v1.0 aprovada 2026-05-12; + campo opcional "horário âncora", KAN-134 em análise)
 
 O ritual diário é o ponto de contato entre sua intenção e o dia real. Ele não tenta prever tudo. Ele ajuda você a escolher um começo, limitar prioridades, deixar espaço para imprevistos e fechar o dia sem carregar tudo na cabeça.
 
@@ -31,6 +31,9 @@ Uma frase que orienta escolhas. Exemplos: "avançar sem abrir novas frentes", "f
 
 **Três prioridades reais**  
 Escolha até três. Se o dia estiver pesado, escolha uma prioridade principal e duas versões mínimas.
+
+**Horário âncora (opcional)**  
+Se o dia tem um compromisso com hora marcada — consulta, reunião, busca na escola — anote o principal aqui. Ele vira o ponto de referência do dia: o que vem antes e o que vem depois se organizam em volta dele. Sem hora marcada hoje? Deixe em branco. Se horários costumam sumir do seu radar, este campo vale mais que o plano inteiro.
 
 **Blocos de tempo opcionais**  
 Use se isso ajudar. Se horários rígidos travam seu ritmo, troque por blocos flexíveis: manhã, tarde, noite, antes do almoço, depois da reunião.
@@ -96,6 +99,8 @@ ___________________________________________________________
 
 3. _________________________________________________________  
    Versão mínima: __________________________________________
+
+**Horário âncora (opcional):** ________ h — ________________________________
 
 **Blocos de tempo opcionais**
 
