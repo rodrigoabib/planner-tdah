@@ -4,16 +4,18 @@ description: Use esta skill quando a tarefa envolver auditoria de UX/UI, conteú
 ---
 
 <!-- NOTA DE COMPATIBILIDADE
-  Este SKILL.md foi criado para o Codex (OpenAI), que lê skills automaticamente via AGENTS.md.
-  O Claude Code NÃO lê este arquivo automaticamente.
+  Este SKILL.md continua sendo a fonte completa da skill de auditoria TDAH para Codex.
+  Claude Code usa o wrapper fino em .claude/skills/tdah-ux-audit/SKILL.md, que aponta
+  para esta skill e para os context packs em docs/agent-context/.
 
-  Para Claude Code, as instruções de implementação estão em:
-    - CLAUDE.md             (lido automaticamente ao iniciar)
-    - quiz/GUIA-IMPLEMENTACAO.md  (guia mestre com código completo por achado)
+  Fontes operacionais compartilhadas:
+    - foundation/operacao-agentes-ia.md
+    - docs/agent-workflows/
+    - docs/agent-context/quiz-scoring-context.md
 
-  Os recursos abaixo continuam válidos para ambos os agentes:
-    - references/         → checklists de UX, copy, acessibilidade, personas
-    - scripts/            → extract-quiz-content.js, score-archetype-paths.js, run-a11y-audit.js
+  Os recursos abaixo continuam validos para ambos os agentes:
+    - references/         -> checklists de UX, copy, acessibilidade, personas
+    - scripts/            -> extract-quiz-content.js, score-archetype-paths.js, run-a11y-audit.js
 -->
 
 # TDAH UX Audit Skill

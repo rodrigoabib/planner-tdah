@@ -20,6 +20,21 @@ description: Use when systematically evaluating existing designs for cognitive a
 
 ## Read This First
 
+### Planner TDAH Compatibility
+
+In `planner-tdah`, use this skill as a support layer for UX/UI and cognitive
+evaluation. Codex reads this file from `.agents/skills/design-evaluation-audit/`;
+Claude Code uses the thin wrapper at
+`.claude/skills/design-evaluation-audit/SKILL.md`.
+
+For project work, read these shared sources before applying the generic audit
+rubrics:
+
+- `foundation/operacao-agentes-ia.md`
+- `docs/agent-context/funil-react-vite-context.md`
+- `docs/agent-context/copy-etica-context.md`
+- `docs/agent-context/gate-pre-trafego-context.md`
+
 ### What This Skill Does
 
 This skill provides **systematic evaluation tools** for assessing existing designs against cognitive science principles. It gives you repeatable checklists, scoring rubrics, and prioritized fix recommendations.

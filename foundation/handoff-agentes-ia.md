@@ -3,8 +3,8 @@
 > **Documento vivo · Versão 1.0 · 2026-05-12**
 > **Ticket:** [KAN-11 / FOUNDATION-5](https://the-abib-company.atlassian.net/browse/KAN-11)
 > **Status:** Aprovado e em vigor
-> **Dependência:** [oferta-mvp.md](oferta-mvp.md), [posicionamento-etico.md](posicionamento-etico.md)
-> **Fonte de verdade:** este arquivo. `CLAUDE.md` e `AGENTS.md` na raiz são versões compactas que referenciam este documento.
+> **Dependência:** [oferta-mvp.md](oferta-mvp.md), [posicionamento-etico.md](posicionamento-etico.md), [operacao-agentes-ia.md](operacao-agentes-ia.md)
+> **Fonte de verdade:** este arquivo. `CLAUDE.md` e `AGENTS.md` na raiz são versões compactas que referenciam este documento. `operacao-agentes-ia.md` é complemento operacional v1.1.
 
 ---
 
@@ -19,6 +19,7 @@
 7. [Template de comentário de conclusão no Jira](#7-template-de-comentário-de-conclusão-no-jira)
 8. [Transições de status no Jira](#8-transições-de-status-no-jira)
 9. [Critérios para considerar o handoff completo](#9-critérios-para-considerar-o-handoff-completo)
+10. [Complemento operacional v1.1](#10-complemento-operacional-v11)
 
 ---
 
@@ -257,10 +258,45 @@ Se algum item não foi cumprido, o ticket permanece **Em andamento**.
 
 ---
 
+## 10. Complemento operacional v1.1
+
+O documento [`foundation/operacao-agentes-ia.md`](operacao-agentes-ia.md)
+complementa este handoff com a infraestrutura agentic v1.1 do projeto. Ele nao
+substitui este arquivo; em caso de conflito, este handoff continua prevalecendo.
+
+Para execucao incremental com Codex e Claude Code:
+
+- Use `docs/agent-workflows/` como fonte compartilhada dos workflows P0.
+- Use `docs/agent-context/` para carregar apenas o menor contexto necessario.
+- Codex usa as skills em `.agents/skills/planner-*`.
+- Claude Code usa wrappers finos em `.claude/skills/planner-*`.
+- Subagentes em `.codex/agents/` permanecem P2/read-only e nao sao requisito
+  para iniciar tickets comuns.
+
+Fechamento de ticket:
+
+- `planner-ticket-done` deve ser tratado como dry-run por padrao.
+- O dry-run deve listar artefatos, validacoes, commit esperado, comentario Jira
+  e transicao pretendida.
+- Mutacoes reais em Jira/GitHub so devem ocorrer apos revisao do dry-run ou
+  quando a tarefa atual pedir explicitamente commit, push, comentario e
+  transicao.
+- A transicao final automatizada permitida continua sendo **31 - Em analise**;
+  **41 - Concluido** exige OK humano explicito.
+
+Gate pre-trafego pago:
+
+- Use `docs/agent-workflows/planner-gate-pre-trafego.md`.
+- O veredito deve ser exatamente `GO`, `NO-GO` ou `GO COM RISCO`.
+- KAN-44 permanece gate P0 antes de escalar investimento em Meta/Instagram Ads.
+
+---
+
 ## Histórico de revisões
 
 | Data | Versão | Mudança | Autor |
 |---|---|---|---|
+| 2026-06-13 | 1.1 | Referencia ao complemento operacional agentic, context packs e dry-run de fechamento | Codex (GPT-5) |
 | 2026-05-12 | 1.0 | Documento inicial — padrão de handoff consolidado | Rodrigo Abib + Claude (Opus 4.7) |
 
 ---

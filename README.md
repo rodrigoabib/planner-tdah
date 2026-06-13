@@ -1,209 +1,225 @@
-# Quiz TDAH v1 — Como sua atenção funciona?
+# Planner TDAH v1 - Funil de venda, quiz e produto PDF
 
-Quiz interativo de 15 perguntas que identifica o padrão de atenção do usuário entre 6 arquétipos comportamentais. Construído como componente React de arquivo único com gamificação (XP, marcos), radar chart e foco em UX ADHD-friendly.
+Projeto do funil de venda do Planner TDAH: quiz de arquetipos de atencao,
+landing personalizada por resultado, oferta do PDF imprimivel, checkout Kiwify,
+analytics e gate pre-trafego pago.
+
+Este README e um snapshot operacional em 2026-06-13. Jira e GitHub sempre
+prevalecem para estado atual de tickets, branches, PRs e entregas.
 
 ---
 
-## Stack técnica
+## 1. Visao geral
 
-| Tecnologia | Versão | Papel |
+O funil atual cobre:
+
+1. Captura do usuario no quiz.
+2. Scoring em 6 arquetipos de atencao.
+3. Resultado com CTA para landing personalizada.
+4. Oferta MVP do planner PDF imprimivel.
+5. Cupom/urgencia de 24h.
+6. Checkout Kiwify.
+7. Eventos PostHog e preservacao de UTMs para Meta/analytics.
+8. Gate pre-trafego pago antes de escalar Instagram/Meta Ads.
+
+Fontes canonicas:
+
+- Oferta, preco, garantia e cupom: `foundation/oferta-mvp.md`
+- Limites eticos de copy: `foundation/posicionamento-etico.md`
+- Workflow de handoff: `foundation/handoff-agentes-ia.md`
+- Operacao Codex/Claude: `foundation/operacao-agentes-ia.md`
+- Backlog e dependencias: `docs/backlog-funil-vendas-2026-05-11.md`
+
+---
+
+## 2. Estado operacional
+
+Snapshot de 2026-06-13:
+
+| Item | Estado |
+|---|---|
+| KAN-132 | Concluido |
+| KAN-133 | Concluido |
+| KAN-134 | Concluido |
+| KAN-24 | Em andamento em fluxo humano+IA |
+| KAN-44 | Pendente como gate P0 antes de trafego pago |
+| Infra agentic | v1.1 em analise no ticket KAN-135 |
+
+Use Jira para confirmar qualquer mudanca posterior a este snapshot.
+
+---
+
+## 3. Stack atual
+
+| Camada | Tecnologia | Uso |
 |---|---|---|
-| React | 18.3.x | UI, estado, efeitos |
-| Vite | 6.x | Dev server, build, preview |
-| Recharts | 2.13.x | Radar chart na tela de resultado |
-| Node.js | 18+ | Scripts de validação |
-| Playwright + axe-core | (raiz) | Auditoria de acessibilidade |
+| App | React 18 + Vite 6 | Quiz, landing e rotas do funil |
+| Rotas | React Router 6 | `/`, `/planner/:slug`, `/obrigado`, legais |
+| Analytics | PostHog (`posthog-js`) | Eventos do quiz/funil e enriquecimento com UTMs |
+| Visualizacao | Recharts | Radar chart no resultado |
+| Auditoria | Playwright + axe-core | A11y, jornada e validacao visual quando aplicavel |
+| Checkout | Kiwify | Compra do PDF imprimivel |
 
 ---
 
-## Estrutura do projeto
+## 4. Estrutura principal
 
-```
+```text
 planner-tdah/
-├── quiz/                          ← Projeto do quiz (Vite + React)
-│   ├── quiz-tdah-v1.jsx           ← Componente único — ÚNICO arquivo a editar
-│   ├── main.jsx                   ← Entry point do Vite
-│   ├── index.html                 ← HTML root com dark bg global e favicon SVG
-│   ├── vite.config.js
-│   ├── package.json
-│   ├── GUIA-IMPLEMENTACAO.md      ← Guia de implementação por achado de auditoria
-│   └── quiz-tdah-especificacao-completa.md
-│
-├── audits/
-│   └── ux-ui-adhd-funnel-audit-2026-05-09.md  ← Auditoria UX/UI completa (fonte de verdade)
-│
-├── .agents/skills/tdah-ux-audit/
-│   ├── scripts/
-│   │   ├── score-archetype-paths.js   ← Valida os 6 arquétipos (similarity 10/10)
-│   │   ├── extract-quiz-content.js    ← Extrai perguntas, opções e eventos analytics
-│   │   └── run-a11y-audit.js          ← Auditoria axe-core via Playwright
-│   └── references/                    ← Checklists UX, a11y, copy, personas
-│
-├── node_modules/                  ← Playwright + axe-core (para auditoria a11y)
-├── package.json                   ← Dependências raiz (Playwright)
-├── CLAUDE.md                      ← Instruções para o Claude Code
-└── quiz-menu.bat                  ← Menu interativo (Windows)
+├── quiz/                         # App Vite/React do funil
+│   ├── main.jsx                  # Entry point, rotas, PostHog e UTMs
+│   ├── coupon.js                 # Cupom QUIZ24H, UTMs e URL de checkout
+│   ├── components/
+│   │   ├── Quiz.jsx              # Quiz, scoring, resultado e CTA
+│   │   ├── Landing.jsx           # Landing personalizada por arquetipo
+│   │   ├── CouponCountdown.jsx   # Urgencia/cupom da oferta
+│   │   ├── Obrigado.jsx          # Pos-checkout/obrigado
+│   │   ├── Termos.jsx
+│   │   ├── Privacidade.jsx
+│   │   └── Reembolso.jsx
+│   ├── data/
+│   │   └── archetypes.js         # Fonte canonica dos 6 arquetipos
+│   └── quiz-tdah-v1.jsx          # Legado historico; nao e a arquitetura ativa
+├── foundation/                   # Oferta, etica, handoff e operacao agentic
+├── docs/agent-context/           # Context packs por area do funil
+├── docs/agent-workflows/         # Workflows compartilhados Codex/Claude
+├── .agents/skills/               # Skills Codex e scripts de auditoria
+├── .claude/skills/               # Wrappers finos para Claude Code
+└── .codex/agents/                # Subagentes Codex P2/read-only
 ```
 
----
-
-## Arquétipos identificados
-
-| Slug | Nome | Símbolo |
-|---|---|---|
-| `nomade-quantico` | O Nômade Quântico | ∞ |
-| `reator-em-cadeia` | O Reator em Cadeia | ⚡ |
-| `vulcao-silencioso` | O Vulcão Silencioso | 🌋 |
-| `arquiteto-do-caos` | O Arquiteto do Caos | 🏗 |
-| `furacao` | O Furacão | 🌀 |
-| `camaleao-exausto` | O Camaleão Exausto | 🦎 |
-
-A CTA de resultado aponta para `/planner?perfil=<slug>` — substitua quando a landing de venda existir.
+Nao editar `quiz/dist/`, `node_modules/`, `.env*`, `.codex/config.toml` ou
+`.claude/settings.local.json`.
 
 ---
 
-## Setup
+## 5. Setup
 
-### Pré-requisitos
+Pre-requisitos:
 
-- Node.js 18 ou superior
-- npm 9 ou superior
+- Node.js 18+
+- npm 9+
 
-### Instalação
+Instalar dependencias do app:
 
 ```bash
-# Instalar dependências do quiz
 cd quiz
 npm install
+```
 
-# (Opcional) Instalar dependências da raiz — necessário para auditoria a11y
-cd ..
+Instalar dependencias de auditoria na raiz quando precisar de Playwright/axe:
+
+```bash
 npm install
+npm run playwright:install
 ```
 
 ---
 
-## Comandos principais
+## 6. Comandos principais
 
-### Desenvolvimento
+Desenvolvimento:
 
 ```bash
 cd quiz
 npm run dev
-# Abre em http://localhost:5173
 ```
 
-### Build de produção
+Build:
 
 ```bash
 cd quiz
 npm run build
-# Saída em quiz/dist/
 ```
 
-### Preview do build
+Preview:
 
 ```bash
 cd quiz
 npm run preview
-# Serve quiz/dist/ em http://localhost:4173
 ```
 
----
-
-## Validações
-
-### Validar 6 arquétipos (sem servidor necessário)
+Validacoes estaticas do quiz:
 
 ```bash
 node .agents/skills/tdah-ux-audit/scripts/score-archetype-paths.js
-# Esperado: 6/6 arquétipos com similarity 10/10
-```
-
-### Extrair conteúdo do quiz (análise estática)
-
-```bash
 node .agents/skills/tdah-ux-audit/scripts/extract-quiz-content.js
-# Lista perguntas, opções, arquétipos e eventos analytics detectados
 ```
 
-### Auditoria de acessibilidade axe-core (requer servidor rodando)
+Auditoria de acessibilidade com servidor rodando:
 
 ```bash
-# Terminal 1: iniciar o quiz
-cd quiz && npm run dev
-
-# Terminal 2: rodar a auditoria
 QUIZ_URL=http://localhost:5173 node .agents/skills/tdah-ux-audit/scripts/run-a11y-audit.js
 ```
 
+Validacao documental/agentic:
+
+```bash
+git -c safe.directory=C:/Projects/Web/planner-tdah diff --check
+Get-ChildItem -Recurse -Filter SKILL.md .agents/skills,.claude/skills |
+  Select-String -Pattern '^name:|^description:' -Context 0,0
+```
+
+Nao rode build do quiz quando a mudanca for apenas documentacao ou skills.
+
 ---
 
-## Arquitetura do componente (`quiz-tdah-v1.jsx`)
+## 7. Quiz, scoring e arquetipos
 
-O arquivo é estruturado em seções lineares — edite apenas dentro do bloco indicado:
+O quiz usa 15 perguntas e classifica o usuario em 6 arquetipos:
 
-| Linhas (aprox.) | Conteúdo |
+| Slug | Nome |
 |---|---|
-| 1–5 | Imports (`react`, `recharts`) |
-| 6–45 | Constante `CSS` (template literal com todos os estilos) |
-| 46–90 | Array `Q` — 15 perguntas com opções e scores por dimensão |
-| 92–130 | Objeto `ARC` — 6 arquétipos com thresholds, copy e ctaUrl |
-| 132–160 | Funções puras: `calcScores`, `sev`, `findArc`, `trackQuizEvent` |
-| 161–200 | Componente `Confetti` |
-| 200–250 | Componente `Landing` |
-| 250–290 | Componente `Header` (barra de progresso + XP) |
-| 290–340 | Componente `QuestionCard` |
-| 340–390 | Componente `MilestoneCard` |
-| 390–430 | Componente `Processing` |
-| 430–500 | Componente `Result` |
-| 500–fim | Componente `App` (estado central + handlers) |
+| `nomade-quantico` | O Nomade Quantico |
+| `reator-em-cadeia` | O Reator em Cadeia |
+| `vulcao-silencioso` | O Vulcao Silencioso |
+| `arquiteto-do-caos` | O Arquiteto do Caos |
+| `furacao` | O Furacao |
+| `camaleao-exausto` | O Camaleao Exausto |
 
-### Dimensões de scoring
+Arquivos principais:
 
-| Dimensão | Código | Max | Descrição |
-|---|---|---|---|
-| Desatenção | D | 11 | Dificuldade de foco e organização |
-| Hiperatividade | H | 9 | Inquietação, excesso de energia |
-| Impulsividade | I | 9 | Ação sem reflexo prévio |
-| Afeto/Regulação | A | 11 | Regulação emocional e humor |
-| Executivo | E | 11 | Planejamento e controle executivo |
+- `quiz/components/Quiz.jsx`
+- `quiz/data/archetypes.js`
+- `quiz/quiz-tdah-especificacao-completa.md`
+- `docs/agent-context/quiz-scoring-context.md`
 
-### Analytics (`trackQuizEvent`)
-
-Eventos disparados (via `console.log` + `window.quizAnalytics?.track`):
-
-| Evento | Quando |
-|---|---|
-| `quiz_started` | Clique em "Começar agora" |
-| `question_answered` | Nova resposta (não reanswer) |
-| `milestone_reached` | Marco 1, 2 ou 3 |
-| `quiz_completed` | Processamento concluído |
-| `archetype_revealed` | Resultado exibido |
-| `cta_clicked` | Clique no CTA de resultado |
-| `quiz_abandoned` | Aba oculta por 30s+ (deduplicado) |
+Depois de mudar scoring, perguntas ou dados de arquetipo, rode as validacoes de
+scoring e extracao de conteudo antes do handoff.
 
 ---
 
-## Regras de modificação
+## 8. Operacao com agentes
 
-1. **Não criar arquivos `.jsx`/`.css` novos** — todo CSS vai no final da constante `CSS`
-2. **Não instalar dependências** — sem `framer-motion`, `canvas-confetti`, etc.
-3. **Sempre rodar `score-archetype-paths.js`** após mudanças em scoring ou `findArc`
-4. **Prioridade de mudanças**: P0 → P1 → P2 → P3
-5. **Entrega completa**: nunca pseudocódigo, sempre código funcional
+Codex e Claude Code usam a mesma fonte operacional:
+
+- Codex: `AGENTS.md` + `.agents/skills/planner-*`
+- Claude Code: `CLAUDE.md` + `.claude/skills/planner-*`
+- Fonte compartilhada: `docs/agent-workflows/*` e `docs/agent-context/*`
+
+Skills P0:
+
+- `planner-ticket-preflight`
+- `planner-context-pack`
+- `planner-validation-runner`
+- `planner-ethics-copy-review`
+- `planner-gate-pre-trafego`
+- `planner-jira-github-sync`
+- `planner-ticket-done`
+
+`planner-ticket-done` e dry-run por padrao. Jira/GitHub so devem ser mutados
+apos confirmacao explicita, exceto quando a propria tarefa atual ja pedir commit,
+push, comentario ou transicao.
 
 ---
 
-## Status da implementação
+## 9. Gates e seguranca
 
-Auditoria UX/UI ADHD (2026-05-09) implementada integralmente em 2026-05-10.
+- Toda copy passa por `foundation/posicionamento-etico.md`.
+- Oferta e checkout devem permanecer coerentes com `foundation/oferta-mvp.md`.
+- KAN-44 e o gate P0 antes de trafego pago.
+- O gate pre-trafego deve emitir `GO`, `NO-GO` ou `GO COM RISCO`.
+- Fluxos `humano-only` e `humano+IA` estao definidos em
+  `docs/agent-context/humano-only-humano-ia-context.md`.
 
-- Build Vite: ✅ sem erros
-- 6/6 arquétipos validados: ✅ similarity 10/10
-- Contrast AA: ✅ todos os tokens auditados
-- Acessibilidade: ✅ landmarks, skip-link, foco programático, headings visually-hidden
-- Analytics: ✅ 7 eventos, dedup de abandon, timer 30s
-- Scoring: ✅ cap por dimensão, denominadores corretos no Marco 2
-
-**Único bloqueador remanescente:** landing de venda em `/planner?perfil=<slug>`.
+Para detalhes operacionais, use `foundation/operacao-agentes-ia.md`.
